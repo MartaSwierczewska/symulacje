@@ -21,19 +21,21 @@ public class Cell {
         this.type = type;
     }
 
-    public int getxPosition() {
+    public int getPositionX() {
         return xPosition;
     }
 
-    public void setxPosition(int xPosition) {
+    public void setPositionX(int xPosition) {
         this.xPosition = xPosition;
     }
 
-    public int getyPosition() {
+    public int getPositionY() {
         return yPosition;
     }
 
-    public void setyPosition(int yPosition) {
+    public void setPositionY(int yPosition) {
         this.yPosition = yPosition;
     }
+
+
 }
