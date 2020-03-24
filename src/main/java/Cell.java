@@ -1,6 +1,6 @@
 public class Cell {
     public enum CellType {
-        FLOOR, PERSON, WALL, FIRE
+        FLOOR, PERSON, WALL, FIRE, EXIT
     }
 
     private CellType type;

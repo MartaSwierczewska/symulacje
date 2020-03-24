@@ -1,3 +1,6 @@
+import javafx.util.Pair;
+
+import java.util.List;
 
 public class Board {
     private int latitude; //szerokość
@@ -50,9 +53,16 @@ public class Board {
 
         for(int r=0;r<rMax;r++) {
             for (int c = 0; c < cMax; c++) {
-                System.out.print(board[r][c].getType()+" ");
+                System.out.print(board[r][c].getType()+"  ");
             }
             System.out.println();
+        }
+    }
+
+    public void addEmergencyExit(List<Pair<Integer,Integer>> exits){
+        Cell[][] board = this.boardWithCells;
+        for(Pair<Integer, Integer> exit : exits){
+            board[exit.getKey()][exit.getValue()].setType(Cell.CellType.EXIT);
         }
     }
 }
