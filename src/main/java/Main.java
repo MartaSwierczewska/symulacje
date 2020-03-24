@@ -1,6 +1,6 @@
+
 import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,9 +14,9 @@ public class Main {
         board.addEmergencyExit(emergencyExits);
 
         while(board.isPersonOnBoard()){
-//            tu funkcja obliczajaca najblizsze exit i przemiszczanie pozaru i zmieniajaca polozenie
+//            tu funkcja obliczajaca najblizsze exit i przemieszczanie pozaru i zmieniajaca polozenie
 //            jakies board.update()
-//             i wtedy znowu board show
+//            i wtedy znowu board show
             board.show();
         }
 
