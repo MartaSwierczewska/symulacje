@@ -5,7 +5,9 @@ import java.util.Random;
 public class Entity {
     private Params.EntityType entityType;
     
+
     private Cell currentCell;
+    private Cell closestExit;
     private int speed;
 
     
@@ -16,13 +18,14 @@ public class Entity {
         this.currentCell = Board.getInstance().getCell(posX, posY);
         this.currentCell.addEntity(this);
         this.entityType = entityType;
+        this.setClosestExit();
     }
 
     public Entity(Params.EntityType entityType, Cell startingCell) {
         this.currentCell = startingCell;
         this.currentCell.addEntity(this);
-
         this.entityType = entityType;
+        this.setClosestExit();
     }
 
     public Params.EntityType getEntityType() {
@@ -35,7 +38,7 @@ public class Entity {
 
     public int getPositionX() {
         return currentCell.getPositionX(); }
-        
+
 
     public int getPositionY() {
         return currentCell.getPositionY();
@@ -50,19 +53,23 @@ public class Entity {
     }
 
     public void runToExit() {
+
         if(Simulation.getInstance().tickCounter % Params.peopleSpeed == 0) {
             currentCell.removeEntity(this);
             currentCell = getNextHoop();
             currentCell.addEntity(this);
         }
 
+        if(currentCell.getCellType() == Params.CellType.EXIT) {
+            currentCell.removeEntity(this);
+        }
+
     }
 
     private Cell getNextHoop() {
-        Cell closestExit = findClosestExit();
-        Cell nextHoop = null;
+        Cell nextHoop = currentCell;
+        double minDistance = currentCell.getDistanceTo(closestExit);
 
-        double minDistance = Double.MAX_VALUE;
         for(Cell neighbour : currentCell.getNeighbours()) {
             if(neighbour.getDistanceTo(closestExit) < minDistance) {
                 minDistance = neighbour.getDistanceTo(closestExit);
@@ -74,12 +81,11 @@ public class Entity {
 
 
 
-    private Cell findClosestExit() {
+    private void setClosestExit() {
         Board board = Board.getInstance();
 
         Cell[][] cells = board.getCells();
         ArrayList <Cell> exits = new ArrayList<>();
-        Cell closestExit = null;
 
         for(int i = 0; i < Params.boardLongitude; i++) {
             for(int j = 0; j < Params.boardLatitude; j++) {
@@ -97,6 +103,5 @@ public class Entity {
                 closestExit = e;
             }
         }
-        return closestExit;
     }
 }

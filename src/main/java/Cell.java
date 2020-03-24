@@ -69,9 +69,9 @@ public class Cell {
 
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                if (i != 0 && j != 0) {
-                    int rx = this.getPositionX() + i;
-                    int ry = this.getPositionY() + j;
+                if (i != 0 || j != 0) {
+                    int rx = this.getPositionX() + j;
+                    int ry = this.getPositionY() + i;
 
                     if (rx >= 0 && ry >= 0 && rx < Params.boardLatitude && ry < Params.boardLongitude) {
                         neighbours.add(Board.getInstance().getCell(rx, ry));

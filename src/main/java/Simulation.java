@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import static java.lang.Thread.sleep;
 
@@ -6,8 +7,8 @@ public class Simulation {
     private static Simulation simulationInstance = null;
 
     private Board board;
-    private ArrayList <Entity> people;
 
+    public ArrayList <Entity> people;
     public long tickCounter = 0;
 
 
@@ -39,19 +40,21 @@ public class Simulation {
     }
 
 
-    public void loop() throws InterruptedException {
+    public void loop() throws InterruptedException, IOException {
 
 
         // simulation continues until every person exits the board
         while(board.isPersonOnBoard()) {
             tickCounter++;
-            board.showBoard();
-            board.showPeople();
+
 
             for(Entity person : people)
                 person.runToExit();
 
+            board.showBoard();
+            board.showPeople();
             sleep(1000);
+
         }
     }
 }

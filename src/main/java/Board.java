@@ -25,7 +25,7 @@ public class Board {
 
     public Cell getCell(int positionX, int positionY) {
         if(positionX >= 0 && positionX < latitude && positionY >= 0 && positionY < longitude)
-            return cells[positionX][positionY];
+            return cells[positionY][positionX];
         else return null;
     }
 
@@ -80,8 +80,8 @@ public class Board {
     }
 
     public boolean isPersonOnBoard() {
-        for(int r = 0; r < longitude - 1; r++) {
-            for (int c = 0; c < latitude - 1; c++) {
+        for(int r = 0; r < longitude; r++) {
+            for (int c = 0; c < latitude; c++) {
                 if(cells[r][c].getEntities().stream().filter(e ->
                         e.getEntityType() == Params.EntityType.PERSON).count() > 0)
                     return true;
