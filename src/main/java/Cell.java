@@ -13,8 +13,8 @@ public class Cell {
         this.yPosition = yPosition;
     }
 
-    public char getType() {
-        return type.toString().charAt(0); //żeby się ładnie wyświetlało, bo FLOOR było dłuższe niż WALL
+    public CellType getType() {
+        return type;
     }
 
     public void setType(CellType type) {

@@ -53,7 +53,7 @@ public class Board {
 
         for(int r=0;r<rMax;r++) {
             for (int c = 0; c < cMax; c++) {
-                System.out.print(board[r][c].getType()+"  ");
+                System.out.print(board[r][c].getType().toString().charAt(0)+"  ");  //zeby sie ladnie wyswietlało
             }
             System.out.println();
         }
@@ -64,5 +64,17 @@ public class Board {
         for(Pair<Integer, Integer> exit : exits){
             board[exit.getKey()][exit.getValue()].setType(Cell.CellType.EXIT);
         }
+    }
+
+    public boolean isPersonOnBoard(){
+        Cell[][] board = this.boardWithCells;
+        for(int r=0;r<longitude-1;r++) {
+            for (int c = 0; c < latitude-1; c++) {
+                if(board[r][c].getType()== Cell.CellType.PERSON){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
