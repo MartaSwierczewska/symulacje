@@ -8,7 +8,7 @@ public class Simulation {
 
     private Board board;
 
-    public ArrayList <Entity> people;
+    public ArrayList <Person> people;
     public long tickCounter = 0;
 
 
@@ -33,9 +33,9 @@ public class Simulation {
     }
 
     private void initPeople() {
-        people = new ArrayList <Entity> ();
+        people = new ArrayList <Person> ();
         for(int i = 0; i < Params.peopleAmount; i++) {
-            people.add(new Entity(Params.EntityType.PERSON));
+            people.add(new Person(Params.EntityType.PERSON));
         }
     }
 
@@ -48,7 +48,7 @@ public class Simulation {
             tickCounter++;
 
 
-            for(Entity person : people)
+            for(Person person : people)
                 person.runToExit();
 
             board.showBoard();

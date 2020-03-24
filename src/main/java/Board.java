@@ -63,6 +63,8 @@ public class Board {
                 if(cells[r][c].getEntities().stream().filter(e ->
                         e.getEntityType() == Params.EntityType.PERSON).count() > 0)
                     System.out.print("P  ");  //zeby sie ladnie wyswietlało
+                else if(cells[r][c].getCellType() == Params.CellType.EXIT)
+                    System.out.print("E  ");
                 else
                     System.out.print(".  ");
             }
