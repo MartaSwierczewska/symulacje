@@ -23,69 +23,68 @@ public class Board {
         return boardInstance;
     }
 
-    public int getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(int latitude) {
-        this.latitude = latitude;
-    }
-
-    public int getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(int longitude) {
-        this.longitude = longitude;
-    }
-
-
     public Cell getCell(int positionX, int positionY) {
         if(positionX >= 0 && positionX < latitude && positionY >= 0 && positionY < longitude)
             return cells[positionX][positionY];
         else return null;
     }
 
+    public Cell[][] getCells() {
+        return cells;
+    }
+
 
     public void setCellTypes() {
-        int rMax = longitude, cMax = latitude;
-
-        for(int r = 0; r < rMax; r++){
-            for (int c = 0; c < cMax; c++){
-                if(r == 0 || c == 0 || r == rMax - 1 || c == cMax - 1) {
-                    cells[r][c] = new Cell(Cell.CellType.WALL, r, c);
+        for(int r = 0; r < longitude; r++){
+            for (int c = 0; c < latitude; c++){
+                if(r == 0 || c == 0 || r == longitude - 1 || c == latitude - 1) {
+                    cells[r][c] = new Cell(Params.CellType.WALL, r, c);
                 } else {
-                    cells[r][c] = new Cell(Cell.CellType.FLOOR, r, c);
+                    cells[r][c] = new Cell(Params.CellType.FLOOR, r, c);
                 }
             }
         }
     }
 
-    public void show(){
-        int rMax = longitude, cMax = latitude;
-
-        for(int r = 0; r < rMax; r++) {
-            for (int c = 0; c < cMax; c++) {
-                System.out.print(cells[r][c].getType().toString().charAt(0) + "  ");  //zeby sie ladnie wyswietlało
+    public void showBoard() {
+        System.out.print("\n\n\n");
+        for(int r = 0; r < longitude; r++) {
+            for (int c = 0; c < latitude; c++) {
+                System.out.print(cells[r][c].getCellType().toString().charAt(0) + "  ");  //zeby sie ladnie wyswietlało
             }
             System.out.println();
         }
     }
 
-    public void addEmergencyExits(List <Pair <Integer,Integer> > exits){
+    public void showPeople() {
+        System.out.print("\n\n\n");
+        for(int r = 0; r < longitude; r++) {
+            for (int c = 0; c < latitude; c++) {
+                if(cells[r][c].getEntities().stream().filter(e ->
+                        e.getEntityType() == Params.EntityType.PERSON).count() > 0)
+                    System.out.print("P  ");  //zeby sie ladnie wyswietlało
+                else
+                    System.out.print(".  ");
+            }
+            System.out.println();
+        }
+
+    }
+
+    public void addEmergencyExits(List <Pair <Integer,Integer> > exits) {
 
         for(Pair <Integer, Integer> exit : exits) {
-            // need to valid if exit is on the wall?
-            cells[exit.getKey()][exit.getValue()].setType(Cell.CellType.EXIT);
+            // TODO: need to valid if exit is on the wall or it's not important?
+            cells[exit.getKey()][exit.getValue()].setCellType(Params.CellType.EXIT);
         }
     }
 
-    public boolean isPersonOnBoard(){
+    public boolean isPersonOnBoard() {
         for(int r = 0; r < longitude - 1; r++) {
             for (int c = 0; c < latitude - 1; c++) {
-                if(cells[r][c].getType()== Cell.CellType.PERSON){
+                if(cells[r][c].getEntities().stream().filter(e ->
+                        e.getEntityType() == Params.EntityType.PERSON).count() > 0)
                     return true;
-                }
             }
         }
         return false;
