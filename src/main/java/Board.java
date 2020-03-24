@@ -59,7 +59,7 @@ public class Board {
         }
     }
 
-    public void addEmergencyExit(List<Pair<Integer,Integer>> exits){
+    public void addEmergencyExit(List <Pair<Integer,Integer>> exits){
         Cell[][] board = this.boardWithCells;
         for(Pair<Integer, Integer> exit : exits){
             board[exit.getKey()][exit.getValue()].setType(Cell.CellType.EXIT);
