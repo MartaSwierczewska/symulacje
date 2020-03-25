@@ -16,7 +16,7 @@ public class Params {
 
     public static final int peopleAmount = 6;
     public static final int peopleSpeed = 1;
-    public static final int fireSpeed = 2; //im mniejsza a wartosc tym szybciej sie porusza
+    public static final int fireSpeed = 3;
 
     public enum CellType {
         FLOOR, WALL, EXIT

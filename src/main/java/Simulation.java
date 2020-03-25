@@ -64,10 +64,12 @@ public class Simulation {
             for(Person person : people)
                 person.runToExit();
 
-            board.showPeople();
-
             for(Fire fire : this.detectFirePlaces())
                 fire.spread();
+
+            board.showPeople();
+
+
 
 
             sleep(1000);

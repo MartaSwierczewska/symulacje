@@ -42,6 +42,10 @@ public class Cell {
     }
 
     public void addEntity(Entity entity) {
+        if(entity.getEntityType()== Params.EntityType.FIRE && entities.size()>0 && entities.get(0).getEntityType()== Params.EntityType.PERSON){
+            System.out.println("Fire is spreading too fast, not everyone ran away :(");
+            System.exit(1);
+        }
         this.entities.add(entity);
     }
 
