@@ -79,8 +79,12 @@ public class Board {
 
     public void addEmergencyExits(List <Pair <Integer,Integer> > exits) {
         for(Pair <Integer, Integer> exit : exits) {
-            // TODO: need to valid if exit is on the wall or it's not important?
-            cells[exit.getKey()][exit.getValue()].setCellType(Params.CellType.EXIT);
+            if(exit.getValue()==0 || exit.getValue()==Params.boardLatitude-1){
+                cells[exit.getKey()][exit.getValue()].setCellType(Params.CellType.EXIT);
+            } else{
+                System.out.println("Exit is not on the edge of plan");
+                System.exit(1);
+            }
         }
     }
 
