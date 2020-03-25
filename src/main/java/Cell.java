@@ -22,8 +22,7 @@ public class Cell {
         this.cellType = cellType;
     }
 
-    public int getPositionX() {
-        return xPosition; }
+    public int getPositionX() { return xPosition; }
 
     public void setPositionX(int xPosition) {
         this.xPosition = xPosition;

@@ -1,5 +1,6 @@
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Board can be singleton class since we have one board in our simulation :)
@@ -50,7 +51,7 @@ public class Board {
         System.out.print("\n\n\n");
         for(int r = 0; r < longitude; r++) {
             for (int c = 0; c < latitude; c++) {
-                System.out.print(cells[r][c].getCellType().toString().charAt(0) + "  ");  //zeby sie ladnie wyswietlało
+                System.out.print(cells[r][c].getCellType().toString().charAt(0) + "  ");
             }
             System.out.println();
         }
@@ -60,11 +61,14 @@ public class Board {
         System.out.print("\n\n\n");
         for(int r = 0; r < longitude; r++) {
             for (int c = 0; c < latitude; c++) {
-                if(cells[r][c].getEntities().stream().filter(e ->
-                        e.getEntityType() == Params.EntityType.PERSON).count() > 0)
-                    System.out.print("P  ");  //zeby sie ladnie wyswietlało
+                if(cells[r][c].getEntities().stream().anyMatch(e ->
+                        e.getEntityType() == Params.EntityType.PERSON))
+                    System.out.print("P  ");
                 else if(cells[r][c].getCellType() == Params.CellType.EXIT)
                     System.out.print("E  ");
+                else if(cells[r][c].getEntities().stream().anyMatch(e ->
+                        e.getEntityType() == Params.EntityType.FIRE))
+                    System.out.print("F  ");
                 else
                     System.out.print(".  ");
             }
@@ -74,7 +78,6 @@ public class Board {
     }
 
     public void addEmergencyExits(List <Pair <Integer,Integer> > exits) {
-
         for(Pair <Integer, Integer> exit : exits) {
             // TODO: need to valid if exit is on the wall or it's not important?
             cells[exit.getKey()][exit.getValue()].setCellType(Params.CellType.EXIT);
@@ -84,11 +87,24 @@ public class Board {
     public boolean isPersonOnBoard() {
         for(int r = 0; r < longitude; r++) {
             for (int c = 0; c < latitude; c++) {
-                if(cells[r][c].getEntities().stream().filter(e ->
-                        e.getEntityType() == Params.EntityType.PERSON).count() > 0)
+                if(cells[r][c].getEntities().stream().anyMatch(e ->
+                        e.getEntityType() == Params.EntityType.PERSON))
                     return true;
             }
         }
         return false;
+    }
+
+    public List<Fire> getFirePlaces() {
+        List<Fire> fireplaces=new ArrayList<>();
+        for(int r = 0; r < longitude; r++) {
+            for (int c = 0; c < latitude; c++) {
+                if (cells[r][c].getEntities().stream().anyMatch(e ->
+                        e.getEntityType() == Params.EntityType.FIRE)) {
+                    fireplaces.add(new Fire(Params.EntityType.FIRE, cells[r][c]));
+                }
+            }
+        }
+        return fireplaces;
     }
 }

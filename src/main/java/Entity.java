@@ -6,7 +6,6 @@ public abstract class Entity {
     protected Cell currentCell;
     protected int speed;
 
-
     
     public Entity(Params.EntityType entityType) {
         Random randomGenerator = new Random();
@@ -32,9 +31,7 @@ public abstract class Entity {
         this.entityType = entityType;
     }
 
-    public int getPositionX() {
-        return currentCell.getPositionX(); }
-
+    public int getPositionX() { return currentCell.getPositionX(); }
 
     public int getPositionY() {
         return currentCell.getPositionY();
@@ -47,12 +44,6 @@ public abstract class Entity {
     public void setCell(Cell cell) {
         this.currentCell = cell;
     }
-
-
-
-
-
-
 
 
 }

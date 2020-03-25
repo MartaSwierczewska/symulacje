@@ -8,15 +8,15 @@ public class Params {
     public static final int boardLongitude = 15;
 
     public static final List <Pair <Integer, Integer> > exits = Arrays.asList(
-            new Pair <Integer, Integer> (2,0),
-            new Pair <Integer, Integer> (7,0),
-            new Pair <Integer, Integer> (9, boardLatitude - 1),
-            new Pair <Integer, Integer> (12, boardLatitude - 1)
-//            new Pair <Integer, Integer> (9,4)
+            new Pair <> (2,0),
+            new Pair<>(7, 0),
+            new Pair<>(9, boardLatitude - 1),
+            new Pair<>(12, boardLatitude - 1)
     );
 
     public static final int peopleAmount = 6;
     public static final int peopleSpeed = 1;
+    public static final int fireSpeed = 2; //im mniejsza a wartosc tym szybciej sie porusza
 
     public enum CellType {
         FLOOR, WALL, EXIT
