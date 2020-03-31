@@ -7,7 +7,6 @@ public abstract class Entity {
 
     protected Params.EntityType entityType;
     protected Cell currentCell;
-    protected int speed;
 
     
     public Entity(Params.EntityType entityType) {
@@ -43,7 +42,7 @@ public abstract class Entity {
                 currentCell.getPositionX() * Params.cellDimension,
                 currentCell.getPositionY() * Params.cellDimension,
                 Params.cellDimension, Params.cellDimension
-        ); // TODO: wrong way...
+        );
     }
 
     public Params.EntityType getEntityType() {

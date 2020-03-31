@@ -25,7 +25,6 @@ public class Board extends JPanel {
         return boardInstance;
     }
 
-
     private void initExits() {
         for(Pair <Integer, Integer> exit : Params.exits) {
             if(exit.getValue() == 0 || exit.getValue() == Params.boardLatitude - 1) {
@@ -61,6 +60,15 @@ public class Board extends JPanel {
         return false;
     }
 
+
+    public boolean isPersonBurning() {
+        if(getCellsAsArrayList().stream().filter(c ->
+                c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.FIRE) &&
+                c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.PERSON)).count() > 0)
+            return true;
+        return false;
+    }
+
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -90,7 +98,7 @@ public class Board extends JPanel {
     }
 
 
-
+    // redundant methods for terminal visualization
 
 //    public void showBoard() {
 //        System.out.print("\n\n\n");

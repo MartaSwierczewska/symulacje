@@ -1,11 +1,11 @@
 package symulacje;
 
-import javax.swing.*;
-import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
         Simulation simulation = Simulation.getInstance();
+        simulation.start();
+
         MainFrame mainFrame = new MainFrame();
 
 
