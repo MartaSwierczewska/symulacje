@@ -1,3 +1,5 @@
+package symulacje;
+
 import java.util.ArrayList;
 
 public class Person extends Entity {

@@ -1,3 +1,5 @@
+package symulacje;
+
 import javafx.util.Pair;
 
 import java.util.ArrayList;

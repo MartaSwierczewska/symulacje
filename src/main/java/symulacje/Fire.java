@@ -1,3 +1,5 @@
+package symulacje;
+
 
 public class Fire extends Entity {
 

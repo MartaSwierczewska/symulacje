@@ -1,3 +1,5 @@
+package symulacje;
+
 import java.util.Random;
 
 public abstract class Entity {

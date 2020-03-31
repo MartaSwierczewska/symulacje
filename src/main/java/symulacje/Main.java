@@ -1,3 +1,5 @@
+package symulacje;
+
 import java.io.IOException;
 
 public class Main {
