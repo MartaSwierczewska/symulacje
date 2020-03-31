@@ -1,5 +1,6 @@
 package symulacje;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Cell {
@@ -14,6 +15,23 @@ public class Cell {
         this.cellType = cellType;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
+    }
+
+    public void draw(Graphics2D graphics2D) {
+        switch(cellType) {
+            case FLOOR:
+                graphics2D.setColor(Params.CellColor.FLOOR);
+                break;
+            case WALL:
+                graphics2D.setColor(Params.CellColor.WALL);
+                break;
+            case EXIT:
+                graphics2D.setColor(Params.CellColor.EXIT);
+                break;
+        }
+
+        graphics2D.fillRect(xPosition * Params.cellDimension, yPosition * Params.cellDimension,
+                            Params.cellDimension, Params.cellDimension);
     }
 
     public Params.CellType getCellType() {
@@ -44,7 +62,7 @@ public class Cell {
     }
 
     public void addEntity(Entity entity) {
-        if(entity.getEntityType()== Params.EntityType.FIRE && entities.size()>0 && entities.get(0).getEntityType()== Params.EntityType.PERSON){
+        if(entity.getEntityType() == Params.EntityType.FIRE && entities.size()>0 && entities.get(0).getEntityType()== Params.EntityType.PERSON){
             System.out.println("Fire is spreading too fast, not everyone ran away :(");
             System.exit(1);
         }

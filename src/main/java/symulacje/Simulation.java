@@ -9,13 +9,55 @@ import static java.lang.Thread.sleep;
 
 public class Simulation {
 
+    public class AnimationThread extends Thread {
+        private boolean suspend = false;
+        private boolean stop = false;
+
+        public synchronized void wakeup() {
+            suspend = false;
+            notify();
+        }
+
+        public void safeStop() { stop = true; }
+
+        public void safeSuspend() { suspend = true; }
+
+        public void run(){
+            while(!stop && board.isPersonOnBoard()) {
+
+                synchronized (this) {
+                    try {
+                        if(suspend) {
+                            System.out.println("Suspending");
+                            wait();
+                        }
+                    } catch (InterruptedException e) { }
+                }
+
+
+                tickCounter++;
+                detectFirePlaces();
+
+                people.stream().forEach(p -> p.runToExit());
+                firePlaces.stream().forEach(f -> f.spread());
+
+
+                board.repaint();
+
+                try { sleep(Params.sleepInterval); } catch (InterruptedException e) { e.printStackTrace(); }
+            }
+
+            System.exit(0);
+        }
+    }
+
     private static Simulation simulationInstance = null;
 
     private Board board;
-
-    public ArrayList <Person> people;
+    private ArrayList <Person> people;
     public ArrayList <Fire> firePlaces;
 
+    private AnimationThread animationThread;
     public long tickCounter = 0;
 
 
@@ -29,15 +71,15 @@ public class Simulation {
         this.initBoard();
         this.initPeople();
         this.initFire();
+
+        animationThread = new AnimationThread();
+        animationThread.start();
     }
 
-    private void initBoard() {
-        // new board object - setting latitude and longitude, init cell array
-        board = Board.getInstance();
-        board.setCellTypes();
 
-        // creating exits
-        board.addEmergencyExits(Params.exits);
+    private void initBoard() {
+        board = Board.getInstance();
+        board.setSize(Params.boardLongitude * Params.cellDimension, Params.boardLatitude * Params.cellDimension);
     }
 
     private void initPeople() {
@@ -53,29 +95,14 @@ public class Simulation {
     }
 
 
-    private List<Fire> detectFirePlaces(){
-        return board.getFirePlaces();
+    private void detectFirePlaces() {
+        firePlaces.clear();
+
+        board.getCellsAsArrayList().stream().forEach(c -> {
+            if(c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.FIRE))
+                firePlaces.add(new Fire(Params.EntityType.FIRE, c));
+        });
     }
 
-    public void loop() throws InterruptedException, IOException {
 
-        // simulation continues until every person exits the board
-        while(board.isPersonOnBoard()) {
-            tickCounter++;
-
-            for(Person person : people)
-                person.runToExit();
-
-            for(Fire fire : this.detectFirePlaces())
-                fire.spread();
-
-            board.showPeople();
-
-
-
-
-            sleep(1000);
-
-        }
-    }
 }

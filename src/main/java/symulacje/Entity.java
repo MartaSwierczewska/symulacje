@@ -1,5 +1,6 @@
 package symulacje;
 
+import java.awt.*;
 import java.util.Random;
 
 public abstract class Entity {
@@ -23,6 +24,26 @@ public abstract class Entity {
         this.currentCell = startingCell;
         this.currentCell.addEntity(this);
         this.entityType = entityType;
+    }
+
+    public void draw(Graphics2D graphics2D) {
+        switch(entityType) {
+            case PERSON:
+                graphics2D.setColor(Params.EntityColor.PERSON);
+                break;
+            case FIRE:
+                graphics2D.setColor(Params.EntityColor.FIRE);
+                break;
+            case SMOKE:
+                graphics2D.setColor(Params.EntityColor.SMOKE);
+                break;
+        }
+
+        graphics2D.fillOval(
+                currentCell.getPositionX() * Params.cellDimension,
+                currentCell.getPositionY() * Params.cellDimension,
+                Params.cellDimension, Params.cellDimension
+        ); // TODO: wrong way...
     }
 
     public Params.EntityType getEntityType() {
