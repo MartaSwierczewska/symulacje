@@ -17,7 +17,7 @@ public class Person extends Entity {
     }
 
 
-    private void setClosestExit() {
+    private void setClosestExit() { //not working
         Board board = Board.getInstance();
 
         Cell[][] cells = board.getCells();
@@ -31,14 +31,25 @@ public class Person extends Entity {
         }
 
         double minDistance = Double.MAX_VALUE;
-        for(Cell e : exits) {
-            double tmp = currentCell.getDistanceTo(e);
+        boolean notSafe = true;
 
-            if(minDistance > tmp) {
-                minDistance = tmp;
-                closestExit = e;
+        do {
+            for (Cell e : exits) {
+                double tmp = currentCell.getDistanceTo(e);
+
+                if (minDistance > tmp) {
+                    minDistance = tmp;
+                    closestExit = e;
+                }
             }
-        }
+            if(!this.isPathSafe(closestExit)){
+                //System.out.println("zmiana obranej drogi");
+                //System.out.println(closestExit.getPositionX() + closestExit.getPositionY());
+                //System.out.println(exits.size());
+                exits.remove(closestExit); //infinite loop because of not removing this element, why??
+                if(exits.isEmpty()) System.out.println("Somebody will die!:(");
+            } else {notSafe = false;}
+        }while(notSafe && !exits.isEmpty());
     }
 
 
@@ -56,6 +67,48 @@ public class Person extends Entity {
 
     }
 
+    public boolean isPathSafe(Cell c){
+        ArrayList <Cell> fireCells = new ArrayList<>();
+        ArrayList <Cell> newFireCells = new ArrayList<>();
+
+        Cell exit = c;
+        Cell position = new Cell(currentCell.getCellType(), currentCell.getPositionY(), currentCell.getPositionX());
+        Cell nextHoop = new Cell(currentCell.getCellType(), currentCell.getPositionY(), currentCell.getPositionX());
+
+        for(Fire fire : Simulation.getInstance().firePlaces) fireCells.add(fire.currentCell);
+
+        long tickCounter = 0;
+        double minDistance = currentCell.getDistanceTo(exit);
+
+        while(true){
+            tickCounter++;
+            for(Cell neighbour : position.getNeighbours()) {
+                if(neighbour.getDistanceTo(exit) < minDistance) {
+                    minDistance = neighbour.getDistanceTo(exit);
+                    nextHoop = neighbour;
+                }
+            }
+
+            if(tickCounter % Params.fireSpeed == 0){
+                for(Cell cell : fireCells) {
+                    for (Cell neighbour : cell.getNeighbours()) {
+                        if (fireCells.contains(neighbour) || newFireCells.contains(neighbour)) continue;
+                        newFireCells.add(neighbour);
+                    }
+                }
+                fireCells.addAll(newFireCells);
+            }
+
+            if( newFireCells.contains(nextHoop)) return false;
+
+            if(nextHoop!=exit){
+                position = nextHoop;
+                newFireCells.clear();
+            }
+            else break;
+        }
+        return true;
+    }
 
     private Cell getNextHoop() {
         Cell nextHoop = currentCell;

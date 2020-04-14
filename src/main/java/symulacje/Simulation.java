@@ -27,8 +27,9 @@ public class Simulation {
 
     private Simulation() {
         this.initBoard();
-        this.initPeople();
         this.initFire();
+      //  this.initPeople();
+
 
         animationThread = new AnimationThread();
     }
@@ -101,7 +102,7 @@ public class Simulation {
         board.setSize(Params.boardLongitude * Params.cellDimension, Params.boardLatitude * Params.cellDimension);
     }
 
-    private void initPeople() {
+    public void initPeople() {
         people = new ArrayList<>();
         for(int i = 0; i < Params.peopleAmount; i++) {
             people.add(new Person(Params.EntityType.PERSON));
@@ -122,6 +123,8 @@ public class Simulation {
                 firePlaces.add(new Fire(Params.EntityType.FIRE, c));
         });
     }
+
+
 
 
 }
