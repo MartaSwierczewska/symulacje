@@ -17,7 +17,7 @@ public class Person extends Entity {
     }
 
 
-    private void setClosestExit() { //not working
+    private void setClosestExit() { 
         Board board = Board.getInstance();
 
         Cell[][] cells = board.getCells();
@@ -31,6 +31,7 @@ public class Person extends Entity {
         }
 
         boolean notSafe = true;
+        //System.out.println("Pozycja startowa: "+"("+ this.currentCell.getPositionX()+","+this.currentCell.getPositionY()+")");
 
         do {
             double minDistance = Double.MAX_VALUE;
@@ -42,14 +43,16 @@ public class Person extends Entity {
                     closestExit = e;
                 }
             }
+            //System.out.println("Dostepne wyjscia:");
+            //for(Cell c : exits) System.out.println("("+c.getPositionX()+","+c.getPositionY()+")");
             if(!this.isPathSafe(closestExit)){
-                //System.out.println("zmiana obranej drogi");
-                //System.out.println(closestExit.getPositionX() + closestExit.getPositionY());
-                //System.out.println(exits.size());
-                exits.remove(closestExit); 
+                //System.out.println("zmiana obranej drogi z tego zlego wyjscia");
+                //System.out.println("("+closestExit.getPositionX()+"," + closestExit.getPositionY()+")");
+                if(exits.contains(closesExit)) exits.remove(closestExit); 
                 if(exits.isEmpty()) System.out.println("Somebody will die!:(");
             } else {notSafe = false;}
         }while(notSafe && !exits.isEmpty());
+        //System.out.println("Wybrane wyjscie: ("+closestExit.getPositionX()+","+closestExit.getPositionY()+")");
     }
 
 
@@ -99,7 +102,7 @@ public class Person extends Entity {
                 fireCells.addAll(newFireCells);
             }
 
-            if( newFireCells.contains(nextHoop)) return false;
+            if( newFireCells.contains(nextHoop) || newFireCells.contains(exit)) return false;
 
             if(nextHoop!=exit){
                 position = nextHoop;
