@@ -30,10 +30,10 @@ public class Person extends Entity {
             }
         }
 
-        double minDistance = Double.MAX_VALUE;
         boolean notSafe = true;
 
         do {
+            double minDistance = Double.MAX_VALUE;
             for (Cell e : exits) {
                 double tmp = currentCell.getDistanceTo(e);
 
@@ -46,7 +46,7 @@ public class Person extends Entity {
                 //System.out.println("zmiana obranej drogi");
                 //System.out.println(closestExit.getPositionX() + closestExit.getPositionY());
                 //System.out.println(exits.size());
-                exits.remove(closestExit); //infinite loop because of not removing this element, why??
+                exits.remove(closestExit); 
                 if(exits.isEmpty()) System.out.println("Somebody will die!:(");
             } else {notSafe = false;}
         }while(notSafe && !exits.isEmpty());
