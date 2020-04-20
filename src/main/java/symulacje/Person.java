@@ -1,19 +1,23 @@
 package symulacje;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Person extends Entity {
 
     private Cell closestExit;
+    private int personSpeed;
 
     public Person(Params.EntityType entityType) {
         super(entityType);
         this.setClosestExit();
+        this.personSpeed=Params.peopleSpeed;
     }
 
     public Person(Params.EntityType entityType, Cell startingCell) {
         super(entityType, startingCell);
         this.setClosestExit();
+        this.personSpeed=Params.peopleSpeed;
     }
 
 
@@ -49,10 +53,26 @@ public class Person extends Entity {
         } while(notSafe && !exits.isEmpty());
     }
 
+    public void setSpeedByNumberOfPeopleAround(){
+        List<Cell> neighbours  = currentCell.getNeighbours();
+        int peopleCounter=0;
+        for(Cell cell : neighbours){
+            if(cell.getEntities().contains(Params.EntityType.PERSON)){
+                peopleCounter++;
+            }
+        }
+        if(peopleCounter/neighbours.size()>0.2){
+            personSpeed*=2;
+        }
+    }
+
+    private boolean isNextHoopExit(Cell cell){
+        return (cell.getCellType()== Params.CellType.EXIT);
+    }
 
     public void runToExit() {
-
-        if(Simulation.getInstance().tickCounter % Params.peopleSpeed == 0) {
+        setSpeedByNumberOfPeopleAround();
+        if(Simulation.getInstance().tickCounter % personSpeed == 0) {
             currentCell.removeEntity(this);
             currentCell = getNextHoop();
             currentCell.addEntity(this);
@@ -63,11 +83,10 @@ public class Person extends Entity {
         }
     }
 
-    public boolean isPathSafe(Cell c){
+    public boolean isPathSafe(Cell exit){
         ArrayList <Cell> fireCells = new ArrayList<>();
         ArrayList <Cell> newFireCells = new ArrayList<>();
 
-        Cell exit = c;
         Cell position = new Cell(currentCell.getCellType(), currentCell.getPositionY(), currentCell.getPositionX());
         Cell nextHoop = new Cell(currentCell.getCellType(), currentCell.getPositionY(), currentCell.getPositionX());
 
@@ -111,7 +130,9 @@ public class Person extends Entity {
         double minDistance = currentCell.getDistanceTo(closestExit);
 
         for(Cell neighbour : currentCell.getNeighbours()) {
-            if(neighbour.getDistanceTo(closestExit) < minDistance && (neighbour.getCellType()== Params.CellType.FLOOR || neighbour.getCellType()== Params.CellType.EXIT)) {
+            if(neighbour.getDistanceTo(closestExit) < minDistance &&
+                    (neighbour.getCellType() == Params.CellType.FLOOR && neighbour.getEntities().size()==0) ||
+                    (neighbour.getCellType() == Params.CellType.EXIT)){
                 minDistance = neighbour.getDistanceTo(closestExit);
                 nextHoop = neighbour;
             }

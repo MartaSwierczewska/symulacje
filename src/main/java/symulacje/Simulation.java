@@ -72,8 +72,8 @@ public class Simulation {
                 // TODO: updating people list, for ex. if someone died should be removed from list
 
                 // actions of people and fire entities
-                people.stream().forEach(p -> p.runToExit());
-                firePlaces.stream().forEach(f -> f.spread());
+                people.forEach(Person::runToExit);
+                firePlaces.forEach(Fire::spread);
 
                 // repainting all components
                 board.repaint();
