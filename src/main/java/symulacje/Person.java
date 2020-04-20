@@ -111,7 +111,7 @@ public class Person extends Entity {
         double minDistance = currentCell.getDistanceTo(closestExit);
 
         for(Cell neighbour : currentCell.getNeighbours()) {
-            if(neighbour.getDistanceTo(closestExit) < minDistance && neighbour.getCellType()!= Params.CellType.WALL) {
+            if(neighbour.getDistanceTo(closestExit) < minDistance && (neighbour.getCellType()== Params.CellType.FLOOR || neighbour.getCellType()== Params.CellType.EXIT)) {
                 minDistance = neighbour.getDistanceTo(closestExit);
                 nextHoop = neighbour;
             }
