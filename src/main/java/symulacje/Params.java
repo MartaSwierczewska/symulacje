@@ -18,7 +18,7 @@ public class Params {
             new Pair<>(12, boardLatitude - 1)
     );
 
-    public static final int peopleAmount = 40;
+    public static final int peopleAmount = 80;
     public static final int peopleSpeed = 1;
     public static final int fireSpeed = 2;
 
