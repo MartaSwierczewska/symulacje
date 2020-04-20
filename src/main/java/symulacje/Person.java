@@ -31,7 +31,6 @@ public class Person extends Entity {
         }
 
         boolean notSafe = true;
-        //System.out.println("Pozycja startowa: "+"("+ this.currentCell.getPositionX()+","+this.currentCell.getPositionY()+")");
 
         do {
             double minDistance = Double.MAX_VALUE;
@@ -43,16 +42,11 @@ public class Person extends Entity {
                     closestExit = e;
                 }
             }
-            //System.out.println("Dostepne wyjscia:");
-            //for(Cell c : exits) System.out.println("("+c.getPositionX()+","+c.getPositionY()+")");
             if(!this.isPathSafe(closestExit)){
-                //System.out.println("zmiana obranej drogi z tego zlego wyjscia");
-                //System.out.println("("+closestExit.getPositionX()+"," + closestExit.getPositionY()+")");
-                if(exits.contains(closesExit)) exits.remove(closestExit); 
+                if(exits.contains(closestExit)) exits.remove(closestExit);
                 if(exits.isEmpty()) System.out.println("Somebody will die!:(");
             } else {notSafe = false;}
-        }while(notSafe && !exits.isEmpty());
-        //System.out.println("Wybrane wyjscie: ("+closestExit.getPositionX()+","+closestExit.getPositionY()+")");
+        } while(notSafe && !exits.isEmpty());
     }
 
 
@@ -67,7 +61,6 @@ public class Person extends Entity {
         if(currentCell.getCellType() == Params.CellType.EXIT) {
             currentCell.removeEntity(this);
         }
-
     }
 
     public boolean isPathSafe(Cell c){
@@ -118,7 +111,7 @@ public class Person extends Entity {
         double minDistance = currentCell.getDistanceTo(closestExit);
 
         for(Cell neighbour : currentCell.getNeighbours()) {
-            if(neighbour.getDistanceTo(closestExit) < minDistance) {
+            if(neighbour.getDistanceTo(closestExit) < minDistance && neighbour.getCellType()!= Params.CellType.WALL) {
                 minDistance = neighbour.getDistanceTo(closestExit);
                 nextHoop = neighbour;
             }
