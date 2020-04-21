@@ -11,6 +11,7 @@ public class Cell {
     private ArrayList <Entity> entities = new ArrayList<>();
 
 
+
     public Cell(Params.CellType cellType, int yPosition, int xPosition) {
         this.cellType = cellType;
         this.xPosition = xPosition;
@@ -26,12 +27,16 @@ public class Cell {
                 graphics2D.setColor(Params.CellColor.WALL);
                 break;
             case EXIT:
+                graphics2D.setColor(Color.BLACK);
+                graphics2D.drawString(String.format("%d", entities.size()), xPosition * Params.cellDimension, yPosition * Params.cellDimension);
                 graphics2D.setColor(Params.CellColor.EXIT);
                 break;
         }
 
         graphics2D.fillRect(xPosition * Params.cellDimension, yPosition * Params.cellDimension,
                             Params.cellDimension, Params.cellDimension);
+
+
     }
 
     public Params.CellType getCellType() {

@@ -8,6 +8,9 @@ public abstract class Entity {
     protected Params.EntityType entityType;
     protected Cell currentCell;
 
+    // flag that helps determine if entity still take part in simulation
+    protected boolean active = false;
+
     
     public Entity(Params.EntityType entityType) {
         Random randomGenerator = new Random();
@@ -16,6 +19,7 @@ public abstract class Entity {
         this.currentCell = Board.getInstance().getCell(posX, posY);
         this.currentCell.addEntity(this);
         this.entityType = entityType;
+        this.active = true;
 
     }
 
@@ -23,6 +27,7 @@ public abstract class Entity {
         this.currentCell = startingCell;
         this.currentCell.addEntity(this);
         this.entityType = entityType;
+        this.active = true;
     }
 
     public void draw(Graphics2D graphics2D) {
@@ -43,6 +48,14 @@ public abstract class Entity {
                 currentCell.getPositionY() * Params.cellDimension,
                 Params.cellDimension, Params.cellDimension
         );
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Params.EntityType getEntityType() {

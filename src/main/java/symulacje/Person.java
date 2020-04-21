@@ -56,15 +56,10 @@ public class Person extends Entity {
 
 
     public void runToExit() {
-
         if(Simulation.getInstance().tickCounter % Params.peopleSpeed == 0) {
             currentCell.removeEntity(this);
             currentCell = getNextHoop();
             currentCell.addEntity(this);
-        }
-
-        if(currentCell.getCellType() == Params.CellType.EXIT) {
-            currentCell.removeEntity(this);
         }
     }
 
@@ -100,7 +95,7 @@ public class Person extends Entity {
                 fireCells.addAll(newFireCells);
             }
 
-            if( newFireCells.contains(nextHoop) || newFireCells.contains(exit)) return false;
+            if(newFireCells.contains(nextHoop) || newFireCells.contains(exit)) return false;
 
             if(nextHoop!=exit){
                 position = nextHoop;
@@ -118,6 +113,10 @@ public class Person extends Entity {
         for(Cell neighbour : currentCell.getNeighbours()) {
             // ignore cells that are not exit or floor (people can't walk on walls)
             if((neighbour.getCellType() != Params.CellType.FLOOR && neighbour.getCellType() != Params.CellType.EXIT))
+                continue;
+
+            // ignore cells that are already occupied
+            if(neighbour.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.PERSON && e.isActive()))
                 continue;
 
             if(neighbour.getDistanceTo(closestExit) < minDistance) {

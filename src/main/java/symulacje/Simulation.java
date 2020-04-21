@@ -74,6 +74,7 @@ public class Simulation {
                 // actions of people and fire entities
                 people.stream().forEach(p -> p.runToExit());
                 firePlaces.stream().forEach(f -> f.spread());
+                deactivateEvacuated();
 
                 // repainting all components
                 board.repaint();
@@ -124,6 +125,10 @@ public class Simulation {
         });
     }
 
+
+    private void deactivateEvacuated() {
+        people.stream().filter(person -> person.getCell().getCellType() == Params.CellType.EXIT).forEach(person -> person.setActive(false));
+    }
 
 
 
