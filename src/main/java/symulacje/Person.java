@@ -42,10 +42,15 @@ public class Person extends Entity {
                     closestExit = e;
                 }
             }
-            if(!this.isPathSafe(closestExit)){
-                if(exits.contains(closestExit)) exits.remove(closestExit);
-                if(exits.isEmpty()) System.out.println("Somebody will die!:(");
-            } else {notSafe = false;}
+            if(!this.isPathSafe(closestExit)) {
+                if(exits.contains(closestExit))
+                    exits.remove(closestExit);
+
+                if(exits.isEmpty())
+                    System.out.println("Somebody will die!:(");
+            } else {
+                notSafe = false;
+            }
         } while(notSafe && !exits.isEmpty());
     }
 
@@ -111,7 +116,11 @@ public class Person extends Entity {
         double minDistance = currentCell.getDistanceTo(closestExit);
 
         for(Cell neighbour : currentCell.getNeighbours()) {
-            if(neighbour.getDistanceTo(closestExit) < minDistance && (neighbour.getCellType()== Params.CellType.FLOOR || neighbour.getCellType()== Params.CellType.EXIT)) {
+            // ignore cells that are not exit or floor (people can't walk on walls)
+            if((neighbour.getCellType() != Params.CellType.FLOOR && neighbour.getCellType() != Params.CellType.EXIT))
+                continue;
+
+            if(neighbour.getDistanceTo(closestExit) < minDistance) {
                 minDistance = neighbour.getDistanceTo(closestExit);
                 nextHoop = neighbour;
             }
