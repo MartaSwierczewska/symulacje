@@ -54,9 +54,17 @@ public class Person extends Entity {
         } while(notSafe && !exits.isEmpty());
     }
 
+    private void setSpeedFactor() {
+        // for now speed factor will depend on amount of neighbors
+        this.speedFactor = (int) currentCell.getNeighbours().stream().filter(cell ->
+                cell.getEntities().stream().anyMatch(entity ->
+                        entity.getEntityType() == Params.EntityType.PERSON)).count() + 1;
+    }
 
     public void runToExit() {
-        if(Simulation.getInstance().tickCounter % Params.peopleSpeed == 0) {
+        this.setSpeedFactor();
+
+        if(Simulation.getInstance().tickCounter % (Params.peopleSpeed * this.speedFactor) == 0 && this.isActive()) {
             currentCell.removeEntity(this);
             currentCell = getNextHoop();
             currentCell.addEntity(this);

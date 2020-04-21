@@ -62,19 +62,20 @@ public class Board extends JPanel {
     }
 
 
-    public boolean isPersonBurning() {
-        if(getCellsAsArrayList().stream().filter(c ->
+    public int howManyBurned() {
+        return (int) getCellsAsArrayList().stream().filter(c ->
                 c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.FIRE) &&
-                c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.PERSON)).count() > 0)
-            return true;
-        return false;
+                c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.PERSON)).count();
     }
 
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        getCellsAsArrayList().stream().forEach(c -> c.draw((Graphics2D) graphics));
-        getCellsAsArrayList().stream().forEach(c -> c.getEntities().stream().forEach(e -> e.draw((Graphics2D) graphics)));
+        // draw cells
+        getCellsAsArrayList().forEach(c -> c.draw((Graphics2D) graphics));
+
+        // draw active entities
+        getCellsAsArrayList().forEach(c -> c.getEntities().stream().filter(Entity::isActive).forEach(e -> e.draw((Graphics2D) graphics)));
     }
 
 

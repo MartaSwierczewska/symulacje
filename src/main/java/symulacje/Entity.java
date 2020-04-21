@@ -8,6 +8,11 @@ public abstract class Entity {
     protected Params.EntityType entityType;
     protected Cell currentCell;
 
+    // additional variable that helps adjust speed of entities dynamically
+    // the bigger it is, the slower entity will move
+    // should not be less than 1
+    protected int speedFactor = 1;
+
     // flag that helps determine if entity still take part in simulation
     protected boolean active = false;
 
