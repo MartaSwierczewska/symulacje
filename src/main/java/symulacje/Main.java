@@ -8,8 +8,5 @@ public class Main {
         simulation.start();
 
         MainFrame mainFrame = new MainFrame();
-
-
-
     }
 }

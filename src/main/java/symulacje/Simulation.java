@@ -30,7 +30,6 @@ public class Simulation {
         this.initFire();
       //  this.initPeople();
 
-
         animationThread = new AnimationThread();
     }
 
@@ -63,17 +62,17 @@ public class Simulation {
                     } catch (InterruptedException e) { }
                 }
 
-
                 tickCounter++;
 
                 // updating fire places list
                 detectFirePlaces();
 
-                // TODO: updating people list, for ex. if someone died should be removed from list
-
                 // actions of people and fire entities
                 people.forEach(Person::runToExit);
                 firePlaces.forEach(Fire::spread);
+
+                deactivateEvacuated();
+                deactivateDead();
 
                 // repainting all components
                 board.repaint();
@@ -83,10 +82,7 @@ public class Simulation {
                     System.out.println("Everyone ran away!");
                     break;
                 }
-                if(board.isPersonBurning()) {
-                    System.out.println("Someone burned :(");
-                    break;
-                }
+                System.out.println(board.howManyBurned());
 
                 // sleep
                 try { sleep(Params.sleepInterval); } catch (InterruptedException e) { e.printStackTrace(); }
@@ -124,6 +120,16 @@ public class Simulation {
         });
     }
 
+
+    private void deactivateEvacuated() {
+        people.stream().filter(person -> person.getCell().getCellType() == Params.CellType.EXIT).forEach(person -> person.setActive(false));
+    }
+
+    private void deactivateDead() {
+        people.stream().filter(person ->
+                person.getCell().getEntities().stream().anyMatch(entity -> entity.getEntityType() == Params.EntityType.FIRE))
+                .forEach(person -> person.setActive(false));
+    }
 
 
 

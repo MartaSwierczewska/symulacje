@@ -20,9 +20,9 @@ public class Params {
 
     public static final int peopleAmount = 60;
     public static final int peopleSpeed = 1;
-    public static final int fireSpeed = 2;
+    public static final int fireSpeed = 4;
 
-    public static final int sleepInterval = 1000;
+    public static final int sleepInterval = 500;
 
     public enum CellType {
         FLOOR, WALL, EXIT

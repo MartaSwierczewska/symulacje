@@ -1,27 +1,23 @@
 package symulacje;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Person extends Entity {
 
     private Cell closestExit;
-    private int personSpeed;
 
     public Person(Params.EntityType entityType) {
         super(entityType);
         this.setClosestExit();
-        this.personSpeed=Params.peopleSpeed;
     }
 
     public Person(Params.EntityType entityType, Cell startingCell) {
         super(entityType, startingCell);
         this.setClosestExit();
-        this.personSpeed=Params.peopleSpeed;
     }
 
 
-    private void setClosestExit() { 
+    private void setClosestExit() {
         Board board = Board.getInstance();
 
         Cell[][] cells = board.getCells();
@@ -46,47 +42,40 @@ public class Person extends Entity {
                     closestExit = e;
                 }
             }
-            if(!this.isPathSafe(closestExit)){
-                if(exits.contains(closestExit)) exits.remove(closestExit);
-                if(exits.isEmpty()) System.out.println("Somebody will die!:(");
-            } else {notSafe = false;}
+            if(!this.isPathSafe(closestExit)) {
+                if(exits.contains(closestExit))
+                    exits.remove(closestExit);
+
+                if(exits.isEmpty())
+                    System.out.println("Somebody will die!:(");
+            } else {
+                notSafe = false;
+            }
         } while(notSafe && !exits.isEmpty());
     }
 
-    public void setSpeedByNumberOfPeopleAround(){
-        List<Cell> neighbours  = currentCell.getNeighbours();
-        int peopleCounter=0;
-        for(Cell cell : neighbours){
-            if(cell.getEntities().contains(Params.EntityType.PERSON)){
-                peopleCounter++;
-            }
-        }
-        if(peopleCounter/neighbours.size()>0.2){
-            personSpeed*=2;
-        }
-    }
-
-    private boolean isNextHoopExit(Cell cell){
-        return (cell.getCellType()== Params.CellType.EXIT);
+    private void setSpeedFactor() {
+        // for now speed factor will depend on amount of neighbors
+        this.speedFactor = (int) currentCell.getNeighbours().stream().filter(cell ->
+                cell.getEntities().stream().anyMatch(entity ->
+                        entity.getEntityType() == Params.EntityType.PERSON)).count() + 1;
     }
 
     public void runToExit() {
-        setSpeedByNumberOfPeopleAround();
-        if(Simulation.getInstance().tickCounter % personSpeed == 0) {
+        this.setSpeedFactor();
+
+        if(Simulation.getInstance().tickCounter % (Params.peopleSpeed * this.speedFactor) == 0 && this.isActive()) {
             currentCell.removeEntity(this);
             currentCell = getNextHoop();
             currentCell.addEntity(this);
         }
-
-        if(currentCell.getCellType() == Params.CellType.EXIT) {
-            currentCell.removeEntity(this);
-        }
     }
 
-    public boolean isPathSafe(Cell exit){
+    public boolean isPathSafe(Cell c){
         ArrayList <Cell> fireCells = new ArrayList<>();
         ArrayList <Cell> newFireCells = new ArrayList<>();
 
+        Cell exit = c;
         Cell position = new Cell(currentCell.getCellType(), currentCell.getPositionY(), currentCell.getPositionX());
         Cell nextHoop = new Cell(currentCell.getCellType(), currentCell.getPositionY(), currentCell.getPositionX());
 
@@ -114,7 +103,7 @@ public class Person extends Entity {
                 fireCells.addAll(newFireCells);
             }
 
-            if( newFireCells.contains(nextHoop) || newFireCells.contains(exit)) return false;
+            if(newFireCells.contains(nextHoop) || newFireCells.contains(exit)) return false;
 
             if(nextHoop!=exit){
                 position = nextHoop;
@@ -130,9 +119,15 @@ public class Person extends Entity {
         double minDistance = currentCell.getDistanceTo(closestExit);
 
         for(Cell neighbour : currentCell.getNeighbours()) {
-            if(neighbour.getDistanceTo(closestExit) < minDistance &&
-                    (neighbour.getCellType() == Params.CellType.FLOOR && neighbour.getEntities().size()==0) ||
-                    (neighbour.getCellType() == Params.CellType.EXIT)){
+            // ignore cells that are not exit or floor (people can't walk on walls)
+            if((neighbour.getCellType() != Params.CellType.FLOOR && neighbour.getCellType() != Params.CellType.EXIT))
+                continue;
+
+            // ignore cells that are already occupied
+            if(neighbour.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.PERSON && e.isActive()))
+                continue;
+
+            if(neighbour.getDistanceTo(closestExit) < minDistance) {
                 minDistance = neighbour.getDistanceTo(closestExit);
                 nextHoop = neighbour;
             }

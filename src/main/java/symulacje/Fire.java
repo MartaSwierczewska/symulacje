@@ -12,9 +12,9 @@ public class Fire extends Entity {
     }
 
     public void spread(){
-        if(Simulation.getInstance().tickCounter % Params.fireSpeed == 0) {
+        if(Simulation.getInstance().tickCounter % (Params.fireSpeed * this.speedFactor) == 0) {
             for(Cell neighbour : currentCell.getNeighbours()) {
-                if(neighbour.getCellType()== Params.CellType.FLOOR){
+                if(neighbour.getCellType()== Params.CellType.FLOOR) {
                     neighbour.addEntity(this);
                 }
             }
