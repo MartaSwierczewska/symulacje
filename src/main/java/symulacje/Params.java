@@ -8,8 +8,8 @@ import java.util.List;
 
 public class Params {
 
-    public static final int boardLatitude = 30;
-    public static final int boardLongitude = 30;
+    public static int boardLatitude=30;
+    public static int boardLongitude=30;
 
     public static final List <Pair <Integer, Integer> > exits = Arrays.asList(
             new Pair<>(2,0),
@@ -18,7 +18,7 @@ public class Params {
             new Pair<>(12, boardLatitude - 1)
     );
 
-    public static final int peopleAmount = 60;
+    public static int peopleAmount=30;
     public static final int peopleSpeed = 1;
     public static final int fireSpeed = 4;
 

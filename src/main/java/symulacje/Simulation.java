@@ -82,7 +82,7 @@ public class Simulation {
                     System.out.println("Everyone ran away!");
                     break;
                 }
-                System.out.println(board.howManyBurned());
+                //System.out.println(board.howManyBurned());
 
                 // sleep
                 try { sleep(Params.sleepInterval); } catch (InterruptedException e) { e.printStackTrace(); }
