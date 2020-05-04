@@ -1,11 +1,10 @@
 package symulacje;
 
-import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 // Board can be singleton class since we have one board in our simulation :)
 public class Board extends JPanel {
@@ -17,6 +16,7 @@ public class Board extends JPanel {
         this.cells = new Cell[Params.boardLongitude][Params.boardLatitude];
         this.initCells();
         this.initExits();
+
     }
 
     public static Board getInstance() {
@@ -26,13 +26,30 @@ public class Board extends JPanel {
     }
 
     private void initExits() {
-        for(Pair <Integer, Integer> exit : Params.exits) {
-            if(exit.getValue() == 0 || exit.getValue() == Params.boardLatitude - 1) {
-                cells[exit.getKey()][exit.getValue()].setCellType(Params.CellType.EXIT);
-            } else {
-                System.out.println("Exit is not on the edge of plan");
-                System.exit(1);
+        Random randomGenerator = new Random();
+        int posX = 0, posY = 0;
+
+        for(int i = 0; i < Params.exitsAmount; i++) {
+            // randomly choosing on which wall exit should be
+            switch (randomGenerator.nextInt(4)) {
+                case 0: // north
+                    posY = 0;
+                    posX = randomGenerator.nextInt(Params.boardLatitude);
+                    break;
+                case 1: // east
+                    posY = randomGenerator.nextInt(Params.boardLongitude);
+                    posX = Params.boardLatitude - 1;
+                    break;
+                case 2: // south
+                    posY = Params.boardLongitude - 1;
+                    posX = randomGenerator.nextInt(Params.boardLatitude);
+                    break;
+                case 3: // west
+                    posY = randomGenerator.nextInt(Params.boardLongitude);
+                    posX = 0;
+                    break;
             }
+            cells[posY][posX].setCellType(Params.CellType.EXIT);
         }
     }
 

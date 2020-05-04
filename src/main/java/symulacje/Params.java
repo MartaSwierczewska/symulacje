@@ -8,17 +8,14 @@ import java.util.List;
 
 public class Params {
 
+    // modifiable properties, need to be loaded at the beginning from the GUI
     public static int boardLatitude;
     public static int boardLongitude;
-
-    public static final List <Pair <Integer, Integer> > exits = Arrays.asList(
-            new Pair<>(2,0),
-            new Pair<>(7, 0),
-            new Pair<>(9, boardLatitude - 1),
-            new Pair<>(12, boardLatitude - 1)
-    );
-
     public static int peopleAmount;
+    public static int exitsAmount;
+
+
+    // constant properties
     public static final int peopleSpeed = 1;
     public static final int fireSpeed = 4;
 

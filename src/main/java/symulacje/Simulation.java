@@ -15,7 +15,7 @@ public class Simulation {
     private ArrayList <Person> people;
     public ArrayList <Fire> firePlaces;
 
-    private AnimationThread animationThread;
+    public AnimationThread animationThread;
     public long tickCounter = 0;
 
 
@@ -26,15 +26,16 @@ public class Simulation {
     }
 
     private Simulation() {
-        this.initBoard();
-        this.initFire();
-      //  this.initPeople();
-
         animationThread = new AnimationThread();
     }
 
     public void start() {
+        this.initBoard();
+        this.initFire();
+        this.initPeople();
+
         animationThread.start();
+        System.out.println("Simulation started successfully...");
     }
 
     public class AnimationThread extends Thread {
@@ -56,7 +57,7 @@ public class Simulation {
                 synchronized (this) {
                     try {
                         if(suspend) {
-                            System.out.println("Suspending");
+                            // System.out.println("Suspending");
                             wait();
                         }
                     } catch (InterruptedException e) { }
