@@ -9,14 +9,17 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Arrays;
 
+
 public class MainFrame extends JFrame  {
+
+    private static MainFrame instance = null;
 
     JPanel rootPanel = new JPanel();
     JPanel upperPanel;
     JPanel simulationPanel;
 
 
-    public MainFrame() {
+    private MainFrame() {
         super("S Y M U L A C J E");
 
         this.setVisible(true);
@@ -31,9 +34,15 @@ public class MainFrame extends JFrame  {
         this.pack();
     }
 
+    public static MainFrame getInstance() {
+        if(instance == null)
+            instance = new MainFrame();
+        return instance;
+    }
+
     private void resize() {
-        int simulationPanelWidth = Params.boardLongitude * Params.cellDimension;
-        int simulationPanelHeight = (Params.boardLatitude + 1) * Params.cellDimension;
+        int simulationPanelWidth = Params.boardLatitude * Params.cellDimension;
+        int simulationPanelHeight = (Params.boardLongitude + 1) * Params.cellDimension;
 
         int initialPanelHeight = upperPanel.getHeight();
 
@@ -53,6 +62,7 @@ public class MainFrame extends JFrame  {
 
         JPanel initialPanel;
         JPanel controlPanel;
+
 
         public UpperPanel() {
             // at the beginning initial panel is set, then after starting simulation
