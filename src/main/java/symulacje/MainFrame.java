@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class MainFrame extends JFrame  {
 
     JPanel rootPanel = new JPanel();
-    JPanel initialPanel;
+    JPanel upperPanel;
     JPanel simulationPanel;
 
 
@@ -25,8 +25,8 @@ public class MainFrame extends JFrame  {
         this.setResizable(true);
 
         rootPanel.setLayout(new BorderLayout());
-        initialPanel = new InitialPanel();
-        rootPanel.add(initialPanel, BorderLayout.SOUTH);
+        upperPanel = new UpperPanel();
+        rootPanel.add(upperPanel, BorderLayout.NORTH);
         setContentPane(rootPanel);
         this.pack();
     }
@@ -34,10 +34,13 @@ public class MainFrame extends JFrame  {
     private void resize() {
         int simulationPanelWidth = Params.boardLongitude * Params.cellDimension;
         int simulationPanelHeight = (Params.boardLatitude + 1) * Params.cellDimension;
-        this.setSize(new Dimension(simulationPanelWidth, simulationPanelHeight));
+
+        int initialPanelHeight = upperPanel.getHeight();
+
+        this.setSize(new Dimension(simulationPanelWidth, simulationPanelHeight + initialPanelHeight));
     }
 
-    public class InitialPanel extends JPanel {
+    public class UpperPanel extends JPanel {
 
         JTextField latitudeField;
         JTextField longitudeField;
@@ -45,12 +48,19 @@ public class MainFrame extends JFrame  {
         JTextField exitsAmountField;
 
         Button submitButton;
-        Button startButton;
-        Button stopButton;
+        Button resumeButton;
+        Button pauseButton;
 
+        JPanel initialPanel;
+        JPanel controlPanel;
 
-        public InitialPanel() {
+        public UpperPanel() {
+            // at the beginning initial panel is set, then after starting simulation
+            // initial panel is removed and replaced by controlPanel, it happens when onSubmit() is called
+            setInitialPanel();
+        }
 
+        private void setInitialPanel() {
             this.setLayout(new GridBagLayout());
 
             JLabel labelLatitude = new JLabel("Latitude: ");
@@ -65,8 +75,8 @@ public class MainFrame extends JFrame  {
             submitButton = new Button("Submit!");
 
             // create a new panel with GridBagLayout manager
-            JPanel newPanel = new JPanel();
-            newPanel.setLayout(new GridBagLayout());
+            initialPanel = new JPanel();
+            initialPanel.setLayout(new GridBagLayout());
 
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.anchor = GridBagConstraints.WEST;
@@ -75,27 +85,27 @@ public class MainFrame extends JFrame  {
             // add components to the panel
             constraints.gridx = 0;
             constraints.gridy = 0;
-            newPanel.add(labelLatitude, constraints);
+            initialPanel.add(labelLatitude, constraints);
             constraints.gridx = 1;
-            newPanel.add(latitudeField, constraints);
+            initialPanel.add(latitudeField, constraints);
 
             constraints.gridx = 0;
             constraints.gridy = 1;
-            newPanel.add(labelLongitude, constraints);
+            initialPanel.add(labelLongitude, constraints);
             constraints.gridx = 1;
-            newPanel.add(longitudeField, constraints);
+            initialPanel.add(longitudeField, constraints);
 
             constraints.gridx = 0;
             constraints.gridy = 2;
-            newPanel.add(labelPeople, constraints);
+            initialPanel.add(labelPeople, constraints);
             constraints.gridx = 1;
-            newPanel.add(peopleAmountField, constraints);
+            initialPanel.add(peopleAmountField, constraints);
 
             constraints.gridx = 0;
             constraints.gridy = 3;
-            newPanel.add(labelExits, constraints);
+            initialPanel.add(labelExits, constraints);
             constraints.gridx = 1;
-            newPanel.add(exitsAmountField, constraints);
+            initialPanel.add(exitsAmountField, constraints);
 
             constraints.gridx = 0;
             constraints.gridy = 4;
@@ -103,16 +113,35 @@ public class MainFrame extends JFrame  {
             constraints.anchor = GridBagConstraints.CENTER;
 
             submitButton.addActionListener(panel -> onSubmit());
-            newPanel.add(submitButton, constraints);
+            initialPanel.add(submitButton, constraints);
 
             // set border for the panel
-            newPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Enter Simulation Parameters"));
+            initialPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Enter Simulation Parameters"));
 
             // add the panel to this frame
-            add(newPanel);
+            this.add(initialPanel);
 
-            pack();
-            setLocationRelativeTo(null);
+            MainFrame.this.pack();
+            MainFrame.this.setLocationRelativeTo(null);
+        }
+
+
+        private void setControlPanel() {
+            this.removeAll();
+            controlPanel = new JPanel();
+
+            pauseButton = new Button("Pause");
+            pauseButton.addActionListener(panel -> onPause());
+            controlPanel.add(pauseButton);
+
+            resumeButton = new Button("Resume");
+            resumeButton.addActionListener(panel -> onResume());
+            controlPanel.add(resumeButton);
+
+            this.add(controlPanel);
+            this.revalidate();
+            this.repaint();
+            MainFrame.this.pack();
         }
 
         private void getValues() {
@@ -127,47 +156,27 @@ public class MainFrame extends JFrame  {
             }
         }
 
-        private void disableInitialFields() {
-            latitudeField.setEnabled(false);
-            longitudeField.setEnabled(false);
-            peopleAmountField.setEnabled(false);
-            exitsAmountField.setEnabled(false);
-
-            submitButton.setEnabled(false);
-        }
-
-//        TODO: show start and stop buttons
-        private void setStartStopButtons() {
-            stopButton = new Button("Stop!");
-            stopButton.addActionListener(panel -> onStop());
-            this.add(stopButton);
-
-            startButton = new Button("Start!");
-            startButton.addActionListener(panel -> onStart());
-            this.add(startButton);
-        }
-
-        private void onSubmit() {
-            this.getValues();
-            this.disableInitialFields();
-            initialPanel.setVisible(false);
-            this.setStartStopButtons();
-
+        private void startSimulation() {
             Simulation.getInstance().start();
 
             simulationPanel = Board.getInstance();
             rootPanel.add(simulationPanel, BorderLayout.CENTER);
+        }
+
+        private void onSubmit() {
+            this.getValues();
+            this.setControlPanel();
+
+            this.startSimulation();
 
             MainFrame.this.resize();
         }
 
-        private void onStop() {
-            // System.out.println("Stop called!");
+        private void onPause() {
             Simulation.getInstance().animationThread.safeSuspend();
         }
 
-        private void onStart() {
-            // System.out.println("Start called!");
+        private void onResume() {
             Simulation.getInstance().animationThread.wakeup();
         }
     }
