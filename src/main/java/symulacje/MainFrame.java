@@ -16,9 +16,6 @@ public class MainFrame extends JFrame  {
     JPanel simulationPanel;
 
 
-
-
-
     public MainFrame() {
         super("S Y M U L A C J E");
 
@@ -45,10 +42,10 @@ public class MainFrame extends JFrame  {
 
     public class InitialPanel extends JPanel {
 
-        JTextArea latitudeField;
-        JTextArea longitudeField;
-        JTextArea peopleAmountField;
-        JTextArea exitsAmountField;
+        JTextField latitudeField;
+        JTextField longitudeField;
+        JTextField peopleAmountField;
+        JTextField exitsAmountField;
 
         Button submitButton;
         Button startButton;
@@ -57,46 +54,68 @@ public class MainFrame extends JFrame  {
 
         public InitialPanel() {
 
-//            JLabel text = new JLabel("Wprowadź parametry wejściowe:");
-//            text.setBounds(10,10,1000,25);
-//            text.setFont(new Font("Courier New", (Font.BOLD | Font.ITALIC), 15));
-//            this.add(text);
-//
-//            JLabel boardLatitude  = new JLabel("Szerokość tablicy:");
-//            latitudeField = new JTextArea();
-//            boardLatitude.setBounds(10,45,200,25);
-//            latitudeField.setBounds(10,80,150,20);
-//            this.add(boardLatitude);
-//            this.add(latitudeField);
-//
-//            JLabel boardLongitude = new JLabel("Długość tablicy:");
-//            longitudeField = new JTextArea();
-//            boardLongitude.setBounds(10,115,200,25);
-//            longitudeField.setBounds(10,150,150,20);
-//            this.add(boardLongitude);
-//            this.add(longitudeField);
-//
-//            JLabel peopleAmount = new JLabel("Ilość ludzi:");
-//            peopleAmountField = new JTextArea();
-//            peopleAmount.setBounds(10,185,200,25);
-//            peopleAmountField.setBounds(10,220,150,20);
-//            this.add(peopleAmount);
-//            this.add(peopleAmountField);
+            this.setLayout(new GridBagLayout());
 
-            // TODO: tylko w ramach testow
-            latitudeField = new JTextArea("30");
-            this.add(latitudeField);
-            longitudeField = new JTextArea("30");
-            this.add(longitudeField);
-            peopleAmountField = new JTextArea("30");
-            this.add(peopleAmountField);
-            exitsAmountField = new JTextArea("5");
-            this.add(exitsAmountField);
+            JLabel labelLatitude = new JLabel("Latitude: ");
+            JLabel labelLongitude = new JLabel("Longitude: ");
+            JLabel labelPeople = new JLabel("Amount of people: ");
+            JLabel labelExits = new JLabel("Amount of exits: ");
 
+            latitudeField = new JTextField(20);
+            longitudeField = new JTextField(20);
+            peopleAmountField = new JTextField(20);
+            exitsAmountField = new JTextField(20);
             submitButton = new Button("Submit!");
-            submitButton.addActionListener(panel -> onSubmit());
-            this.add(submitButton);
 
+            // create a new panel with GridBagLayout manager
+            JPanel newPanel = new JPanel();
+            newPanel.setLayout(new GridBagLayout());
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.anchor = GridBagConstraints.WEST;
+            constraints.insets = new Insets(10, 10, 10, 10);
+
+            // add components to the panel
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            newPanel.add(labelLatitude, constraints);
+            constraints.gridx = 1;
+            newPanel.add(latitudeField, constraints);
+
+            constraints.gridx = 0;
+            constraints.gridy = 1;
+            newPanel.add(labelLongitude, constraints);
+            constraints.gridx = 1;
+            newPanel.add(longitudeField, constraints);
+
+            constraints.gridx = 0;
+            constraints.gridy = 2;
+            newPanel.add(labelPeople, constraints);
+            constraints.gridx = 1;
+            newPanel.add(peopleAmountField, constraints);
+
+            constraints.gridx = 0;
+            constraints.gridy = 3;
+            newPanel.add(labelExits, constraints);
+            constraints.gridx = 1;
+            newPanel.add(exitsAmountField, constraints);
+
+            constraints.gridx = 0;
+            constraints.gridy = 4;
+            constraints.gridwidth = 3;
+            constraints.anchor = GridBagConstraints.CENTER;
+
+            submitButton.addActionListener(panel -> onSubmit());
+            newPanel.add(submitButton, constraints);
+
+            // set border for the panel
+            newPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Enter Simulation Parameters"));
+
+            // add the panel to this frame
+            add(newPanel);
+
+            pack();
+            setLocationRelativeTo(null);
         }
 
         private void getValues() {
@@ -134,6 +153,8 @@ public class MainFrame extends JFrame  {
             this.getValues();
             this.disableInitialFields();
             this.setStartStopButtons();
+
+            this.setVisible(false);
 
             Simulation.getInstance().start();
 
