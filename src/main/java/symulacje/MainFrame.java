@@ -26,19 +26,16 @@ public class MainFrame extends JFrame  {
 
         rootPanel.setLayout(new BorderLayout());
         initialPanel = new InitialPanel();
-        rootPanel.add(initialPanel, BorderLayout.NORTH);
+        rootPanel.add(initialPanel, BorderLayout.SOUTH);
         setContentPane(rootPanel);
         this.pack();
     }
 
     private void resize() {
-        int initialPanelHeight = initialPanel.getHeight();
         int simulationPanelWidth = Params.boardLongitude * Params.cellDimension;
         int simulationPanelHeight = (Params.boardLatitude + 1) * Params.cellDimension;
-
-        this.setSize(new Dimension(simulationPanelWidth, simulationPanelHeight + initialPanelHeight));
+        this.setSize(new Dimension(simulationPanelWidth, simulationPanelHeight));
     }
-
 
     public class InitialPanel extends JPanel {
 
@@ -139,6 +136,7 @@ public class MainFrame extends JFrame  {
             submitButton.setEnabled(false);
         }
 
+//        TODO: show start and stop buttons
         private void setStartStopButtons() {
             stopButton = new Button("Stop!");
             stopButton.addActionListener(panel -> onStop());
@@ -152,9 +150,8 @@ public class MainFrame extends JFrame  {
         private void onSubmit() {
             this.getValues();
             this.disableInitialFields();
+            initialPanel.setVisible(false);
             this.setStartStopButtons();
-
-            this.setVisible(false);
 
             Simulation.getInstance().start();
 
