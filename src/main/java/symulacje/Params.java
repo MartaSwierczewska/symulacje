@@ -12,6 +12,12 @@ public class Params {
     public static int peopleAmount;
     public static int exitsAmount;
 
+    public static double windSpeed;
+    public static double windDirection;
+    public static double xSpeed;
+    public static double ySpeed;
+
+
 
     // constant properties
     public static final int peopleSpeed = 1;

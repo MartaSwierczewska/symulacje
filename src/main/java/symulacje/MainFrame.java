@@ -160,6 +160,14 @@ public class MainFrame extends JFrame  {
                 Params.boardLongitude = Integer.parseInt(this.longitudeField.getText());
                 Params.peopleAmount = Integer.parseInt(this.peopleAmountField.getText());
                 Params.exitsAmount = Integer.parseInt(this.exitsAmountField.getText());
+
+                //for now
+                Params.windDirection = 30*(Math.PI/180) ; //degrees to radians
+                Params.windSpeed = 8*1000/3600D; //m/s
+                Params.xSpeed= Params.windSpeed *Math.cos(Params.windDirection);
+                Params.ySpeed= Params.windSpeed*Math.sin(Params.windDirection);
+                //System.out.println(Params.ySpeed + "  "+ Params.xSpeed);
+
             } catch (NumberFormatException e) {
                 System.out.println("Illegal arguments!");
                 System.exit(1);
