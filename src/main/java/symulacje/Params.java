@@ -21,9 +21,9 @@ public class Params {
 
     // constant properties
     public static final int peopleSpeed = 1;
-    public static final int fireSpeed = 4;
+    public static final int fireSpeed = 8;
 
-    public static final int sleepInterval = 500;
+    public static final int sleepInterval = 1000;
 
     public enum CellType {
         FLOOR, WALL, EXIT

@@ -1,8 +1,11 @@
 package symulacje;
 
+import javafx.util.Pair;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
@@ -10,6 +13,7 @@ import static java.lang.Thread.sleep;
 public class Simulation {
 
     private static Simulation simulationInstance = null;
+    public static HashMap< Cell, Long>  cellsWithBurnTime;
 
     private Board board;
     private ArrayList <Person> people;
@@ -72,6 +76,7 @@ public class Simulation {
                 people.forEach(Person::runToExit);
                 firePlaces.forEach(Fire::spread);
 
+
                 deactivateEvacuated();
                 deactivateDead();
 
@@ -107,6 +112,7 @@ public class Simulation {
     }
 
     private void initFire(){
+        cellsWithBurnTime = new HashMap<>();
         firePlaces = new ArrayList<>();
         firePlaces.add(new Fire(Params.EntityType.FIRE));
     }
@@ -114,11 +120,14 @@ public class Simulation {
 
     private void detectFirePlaces() {
         firePlaces.clear();
-
         board.getCellsAsArrayList().stream().forEach(c -> {
             if(c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.FIRE))
                 firePlaces.add(new Fire(Params.EntityType.FIRE, c));
         });
+
+        for(int i=0;i<firePlaces.size();i++){
+            if(!cellsWithBurnTime.containsKey(firePlaces.get(i).currentCell)) cellsWithBurnTime.put(firePlaces.get(i).currentCell, new Long(Simulation.getInstance().tickCounter));
+        }
     }
 
 

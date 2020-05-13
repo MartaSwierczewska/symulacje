@@ -1,26 +1,32 @@
 package symulacje;
 
 
+import javafx.util.Pair;
+
+import java.util.ArrayList;
+import javafx.util.Pair;
+
 public class Fire extends Entity {
-    public long birthTic;
+
 
     public Fire(Params.EntityType entityType) {
         super(entityType);
-        this.birthTic=Simulation.getInstance().tickCounter;
     }
 
     public Fire(Params.EntityType entityType, Cell cell) {
         super(entityType, cell);
-        this.birthTic=Simulation.getInstance().tickCounter;
+
     }
 
     public void spread(){
+
         //neighbour's index in neighbour arraylist corresponds to index of its spreading speed direction factor in factors array
             for(Cell neighbour : currentCell.getNeighbours()) {
+                Long burnTime = Simulation.cellsWithBurnTime.get(currentCell);
 
                 if(currentCell.getNeighbours().size()==8) {
                     int factorIndex = currentCell.getNeighbours().indexOf(neighbour);
-                    double x = (Simulation.getInstance().tickCounter-this.birthTic) / (Params.fireSpeed * this.speedToNeighCells[factorIndex]);
+                    double x = (Simulation.getInstance().tickCounter-burnTime.longValue()) / (Params.fireSpeed * this.speedToNeighCells[factorIndex]);
 
                     if (neighbour.getCellType() == Params.CellType.FLOOR
                             && x >= 1) {
@@ -73,7 +79,7 @@ public class Fire extends Entity {
                     neighFactor=this.speedToNeighCells[pos];
 
 
-                    double x = (Simulation.getInstance().tickCounter-this.birthTic) / (Params.fireSpeed * neighFactor);
+                    double x = (Simulation.getInstance().tickCounter-burnTime.longValue()) / (Params.fireSpeed * neighFactor);
 
                     if (neighbour.getCellType() == Params.CellType.FLOOR
                             && x >= 1) {

@@ -55,6 +55,9 @@ public class MainFrame extends JFrame  {
         JTextField longitudeField;
         JTextField peopleAmountField;
         JTextField exitsAmountField;
+        JTextField windSpeedField;
+        JTextField windDirectionField;
+
 
         Button submitButton;
         Button resumeButton;
@@ -77,12 +80,18 @@ public class MainFrame extends JFrame  {
             JLabel labelLongitude = new JLabel("Longitude: ");
             JLabel labelPeople = new JLabel("Amount of people: ");
             JLabel labelExits = new JLabel("Amount of exits: ");
+            JLabel labelWindSpeed = new JLabel("Wind speed (km/h): ");
+            JLabel labelWindDirection = new JLabel("Wind direction (degrees): ");
+
 
             latitudeField = new JTextField(20);
             longitudeField = new JTextField(20);
             peopleAmountField = new JTextField(20);
             exitsAmountField = new JTextField(20);
+            windSpeedField = new JTextField(20);
+            windDirectionField = new JTextField(20);
             submitButton = new Button("Submit!");
+
 
             // create a new panel with GridBagLayout manager
             initialPanel = new JPanel();
@@ -119,6 +128,18 @@ public class MainFrame extends JFrame  {
 
             constraints.gridx = 0;
             constraints.gridy = 4;
+            initialPanel.add(labelWindSpeed, constraints);
+            constraints.gridx = 1;
+            initialPanel.add(windSpeedField, constraints);
+
+            constraints.gridx = 0;
+            constraints.gridy = 5;
+            initialPanel.add(labelWindDirection, constraints);
+            constraints.gridx = 1;
+            initialPanel.add(windDirectionField, constraints);
+
+            constraints.gridx = 0;
+            constraints.gridy = 6;
             constraints.gridwidth = 3;
             constraints.anchor = GridBagConstraints.CENTER;
 
@@ -162,8 +183,8 @@ public class MainFrame extends JFrame  {
                 Params.exitsAmount = Integer.parseInt(this.exitsAmountField.getText());
 
                 //for now
-                Params.windDirection = 30*(Math.PI/180) ; //degrees to radians
-                Params.windSpeed = 8*1000/3600D; //m/s
+                Params.windDirection = Integer.parseInt(this.windDirectionField.getText())*(Math.PI/180) ; //degrees to radians
+                Params.windSpeed = Integer.parseInt(this.windSpeedField.getText())*1000/3600D; //m/s
                 Params.xSpeed= Params.windSpeed *Math.cos(Params.windDirection);
                 Params.ySpeed= Params.windSpeed*Math.sin(Params.windDirection);
                 //System.out.println(Params.ySpeed + "  "+ Params.xSpeed);
