@@ -83,95 +83,100 @@ public class Person extends Entity {
         for(Fire fire : Simulation.getInstance().firePlaces) fireCells.add(fire.currentCell);
 
         long tickCounter = 0;
-        double minDistance = currentCell.getDistanceTo(exit);
+        double minDistance = this.currentCell.getDistanceTo(exit);
         HashMap< Cell, Long> tempCellsWithBurnTime = new HashMap<>();
 
         //predict fire spreading to return information about path safety
         while(true){
             tickCounter++;
             for(int i=0;i<fireCells.size();i++) {
-                if (!tempCellsWithBurnTime.containsKey(fireCells.get(i))) tempCellsWithBurnTime.put(fireCells.get(i), new Long(tickCounter));
+                if (!tempCellsWithBurnTime.containsKey(fireCells.get(i))){
+                    tempCellsWithBurnTime.put(fireCells.get(i), new Long(tickCounter)-1);
+                }
             }
 
-                for(Cell neighbour : position.getNeighbours()) {
-                    if(neighbour.getDistanceTo(exit) < minDistance) {
+            for(Cell neighbour : position.getNeighbours()) {
+                if((neighbour.getDistanceTo(exit) < minDistance) && !fireCells.contains(neighbour) && (neighbour.getCellType()!= Params.CellType.WALL)) {
                     minDistance = neighbour.getDistanceTo(exit);
                     nextHoop = neighbour;
                 }
             }
 
+
             for(Cell cell : fireCells) {
-            for(Cell neighbour : cell.getNeighbours()) {
-                Long burntime = tempCellsWithBurnTime.get(cell);
+                for(Cell neighbour : cell.getNeighbours()) {
+                    Long burntime = tempCellsWithBurnTime.get(cell);
 
-                if(cell.getNeighbours().size()==8) {
-                    int factorIndex = cell.getNeighbours().indexOf(neighbour);
-                    double x = (tickCounter-burntime.longValue()) / (Params.fireSpeed * this.speedToNeighCells[factorIndex]);
+                    if(cell.getNeighbours().size()==8) {
+                        int factorIndex = cell.getNeighbours().indexOf(neighbour);
+                        double x = (tickCounter-burntime.longValue()) / (Params.fireSpeed * this.speedToNeighCells[factorIndex]);
 
-                    if (neighbour.getCellType() == Params.CellType.FLOOR
-                            && x >= 1) {
-                        newFireCells.add(neighbour);
+                        if (neighbour.getCellType() == Params.CellType.FLOOR
+                                && !fireCells.contains(neighbour)
+                                && x >= 1) {
+                            newFireCells.add(neighbour);
+                        }
+
+
                     }
+                    //cells on border - shorter neighbour's arraylist
+                    else{
+                        int xCurr=cell.getPositionX();
+                        int yCurr=cell.getPositionY();
+                        int xNeigh=neighbour.getPositionX();
+                        int yNeigh=neighbour.getPositionY();
+                        int pos=0;
+                        double neighFactor;
 
-
-                }
-                //cells on border - shorter neighbour's arraylist
-                else{
-                    int xCurr=cell.getPositionX();
-                    int yCurr=cell.getPositionY();
-                    int xNeigh=neighbour.getPositionX();
-                    int yNeigh=neighbour.getPositionY();
-                    double neighFactor=0;
-                    int pos=0;
-
-                    if(xNeigh>xCurr){
-                        if(yNeigh>yCurr) {
-                            pos=7;
+                        if(xNeigh>xCurr){
+                            if(yNeigh>yCurr) {
+                                pos=7;
+                            }
+                            else {
+                                pos=2;
+                            }
                         }
-                        else {
-                            pos=2;
+                        if(xNeigh<xCurr){
+                            if(yNeigh>yCurr) {
+                                pos=5;
+                            }
+                            else {
+                                pos=0;
+                            }
                         }
+                        if(xNeigh==xCurr){
+                            if(yNeigh>yCurr) {
+                                pos=6;
+                            }
+                            else {
+                                pos=1;
+                            }
+                        }
+                        if(yNeigh==yCurr){
+                            if(xNeigh>xCurr) {
+                                pos=4;
+                            }
+                            else {
+                                pos=3;
+                            }
+                        }
+
+                        neighFactor=this.speedToNeighCells[pos];
+
+
+                        double x = (tickCounter-burntime.longValue()) / (Params.fireSpeed * neighFactor);
+
+                        if (neighbour.getCellType() == Params.CellType.FLOOR
+                                && !fireCells.contains(neighbour)
+                                && x >= 1) {
+                            newFireCells.add(neighbour);
+                        }
+
                     }
-                    if(xNeigh<xCurr){
-                        if(yNeigh>yCurr) {
-                            pos=5;
-                        }
-                        else {
-                            pos=0;
-                        }
-                    }
-                    if(xNeigh==xCurr){
-                        if(yNeigh>yCurr) {
-                            pos=6;
-                        }
-                        else {
-                            pos=1;
-                        }
-                    }
-                    if(yNeigh==yCurr){
-                        if(xNeigh>xCurr) {
-                            pos=4;
-                        }
-                        else {
-                            pos=3;
-                        }
-                    }
-
-                    neighFactor=this.speedToNeighCells[pos];
-
-
-                    double x = (tickCounter-burntime.longValue()) / (Params.fireSpeed * neighFactor);
-
-                    if (neighbour.getCellType() == Params.CellType.FLOOR
-                            && x >= 1) {
-                        newFireCells.add(neighbour);
-                    }
-
                 }
             }
-        }
 
-            if(newFireCells.contains(nextHoop) || newFireCells.contains(exit)) return false;
+            if(newFireCells.contains(nextHoop) || fireCells.contains(nextHoop)) return false;
 
             if(nextHoop!=exit){
                 fireCells.addAll(newFireCells);

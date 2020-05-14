@@ -19,18 +19,17 @@ public class Fire extends Entity {
     }
 
     public void spread(){
-
         //neighbour's index in neighbour arraylist corresponds to index of its spreading speed direction factor in factors array
-            for(Cell neighbour : currentCell.getNeighbours()) {
-                Long burnTime = Simulation.cellsWithBurnTime.get(currentCell);
+            for(Cell neighbour : this.currentCell.getNeighbours()) {
+                Long burnTime = Simulation.cellsWithBurnTime.get(this.currentCell);
 
-                if(currentCell.getNeighbours().size()==8) {
-                    int factorIndex = currentCell.getNeighbours().indexOf(neighbour);
+                if(this.currentCell.getNeighbours().size()==8) {
+                    int factorIndex = this.currentCell.getNeighbours().indexOf(neighbour);
                     double x = (Simulation.getInstance().tickCounter-burnTime.longValue()) / (Params.fireSpeed * this.speedToNeighCells[factorIndex]);
 
                     if (neighbour.getCellType() == Params.CellType.FLOOR
                             && x >= 1) {
-                        neighbour.addEntity(this);
+                        new Fire(Params.EntityType.FIRE, neighbour);
                     }
 
                 }
@@ -77,13 +76,11 @@ public class Fire extends Entity {
                     }
 
                     neighFactor=this.speedToNeighCells[pos];
-
-
                     double x = (Simulation.getInstance().tickCounter-burnTime.longValue()) / (Params.fireSpeed * neighFactor);
 
                     if (neighbour.getCellType() == Params.CellType.FLOOR
                             && x >= 1) {
-                        neighbour.addEntity(this);
+                       new Fire(Params.EntityType.FIRE, neighbour);
                     }
 
                 }

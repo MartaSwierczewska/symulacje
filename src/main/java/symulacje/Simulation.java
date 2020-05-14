@@ -68,7 +68,6 @@ public class Simulation {
                 }
 
                 tickCounter++;
-
                 // updating fire places list
                 detectFirePlaces();
 
@@ -126,7 +125,10 @@ public class Simulation {
         });
 
         for(int i=0;i<firePlaces.size();i++){
-            if(!cellsWithBurnTime.containsKey(firePlaces.get(i).currentCell)) cellsWithBurnTime.put(firePlaces.get(i).currentCell, new Long(Simulation.getInstance().tickCounter));
+            if(!cellsWithBurnTime.containsKey(firePlaces.get(i).currentCell))
+            {
+                cellsWithBurnTime.put(firePlaces.get(i).currentCell, new Long(Simulation.getInstance().tickCounter)-1);
+            }
         }
     }
 

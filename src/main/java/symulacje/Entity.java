@@ -92,8 +92,8 @@ public abstract class Entity {
     //for fire and maybe smoke
     public void setSpeedFactors(){
         double n=1, ne=1, e=1, se=1, s=1, sw=1, w=1, nw = 1;
-        double xSpeed=Params.xSpeed*0.2;
-        double ySpeed=Params.ySpeed*0.2;
+        double xSpeed=Params.xSpeed*0.1;
+        double ySpeed=Params.ySpeed*0.1;
         double[] sF = {nw, n, ne, w, e, sw, s, se};
 
         if (xSpeed > 0) {
@@ -146,7 +146,6 @@ public abstract class Entity {
         sF[2]*=Math.sqrt(2);
         sF[5]*=Math.sqrt(2);
         sF[7]*=Math.sqrt(2);*/
-
         this.speedToNeighCells = sF;
 
     }
