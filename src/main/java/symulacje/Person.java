@@ -193,6 +193,8 @@ public class Person extends Entity {
         double minDistance = currentCell.getDistanceTo(closestExit);
 
         for(Cell neighbour : currentCell.getNeighbours()) {
+            if(neighbour.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.FIRE))
+                continue;
             // ignore cells that are not exit or floor (people can't walk on walls)
             if((neighbour.getCellType() != Params.CellType.FLOOR && neighbour.getCellType() != Params.CellType.EXIT))
                 continue;
