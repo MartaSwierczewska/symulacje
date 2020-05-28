@@ -183,8 +183,15 @@ public class MainFrame extends JFrame  {
                 Params.exitsAmount = Integer.parseInt(this.exitsAmountField.getText());
 
                 //for now
-                Params.windDirection = Integer.parseInt(this.windDirectionField.getText())*(Math.PI/180) ; //degrees to radians
-                Params.windSpeed = Integer.parseInt(this.windSpeedField.getText())*1000/3600D; //m/s
+                Params.windDirection = Integer.parseInt(this.windDirectionField.getText());
+                if( Params.windDirection==0 || Params.windDirection==180 || Params.windDirection==360) {
+                    Params.windDirection *= (Math.PI / 180); //degrees to radians
+                    Params.windSpeed = 0;
+                }
+                else{
+                    Params.windDirection *= (Math.PI/180) ; //degrees to radians
+                    Params.windSpeed = Integer.parseInt(this.windSpeedField.getText())*1000/3600D; //m/s
+                }
                 Params.xSpeed= Params.windSpeed *Math.cos(Params.windDirection);
                 Params.ySpeed= Params.windSpeed*Math.sin(Params.windDirection);
                 //System.out.println(Params.ySpeed + "  "+ Params.xSpeed);

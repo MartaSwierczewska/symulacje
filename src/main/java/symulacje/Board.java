@@ -31,23 +31,16 @@ public class Board extends JPanel {
 
         for(int i = 0; i < Params.exitsAmount; i++) {
             // randomly choosing on which wall exit should be
-            switch (randomGenerator.nextInt(4)) {
-                case 0: // north
-                    posY = 0;
-                    posX = randomGenerator.nextInt(Params.boardLatitude);
+            switch (randomGenerator.nextInt(2)) {
+                case 0: // west
+                    posY = randomGenerator.nextInt(Params.boardLongitude);
+                    posX = 0;
                     break;
                 case 1: // east
                     posY = randomGenerator.nextInt(Params.boardLongitude);
                     posX = Params.boardLatitude - 1;
                     break;
-                case 2: // south
-                    posY = Params.boardLongitude - 1;
-                    posX = randomGenerator.nextInt(Params.boardLatitude);
-                    break;
-                case 3: // west
-                    posY = randomGenerator.nextInt(Params.boardLongitude);
-                    posX = 0;
-                    break;
+
             }
             cells[posY][posX].setCellType(Params.CellType.EXIT);
         }
@@ -56,7 +49,7 @@ public class Board extends JPanel {
     private void initCells() {
         for(int r = 0; r < Params.boardLongitude; r++) {
             for (int c = 0; c < Params.boardLatitude; c++) {
-                if(r == 0 || c == 0 || r == Params.boardLongitude - 1 || c == Params.boardLatitude - 1) {
+                if(c==0 || c==Params.boardLatitude-1){
                     cells[r][c] = new Cell(Params.CellType.WALL, r, c);
                 } else {
                     cells[r][c] = new Cell(Params.CellType.FLOOR, r, c);
