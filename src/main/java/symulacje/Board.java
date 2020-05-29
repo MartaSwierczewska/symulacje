@@ -71,6 +71,19 @@ public class Board extends JPanel {
         return false;
     }
 
+    public long countFireCells(){
+        long counter=0;
+        for(int r = 0; r < Params.boardLongitude; r++) {
+            for (int c = 0; c < Params.boardLatitude; c++) {
+                counter += cells[r][c].getEntities().stream()
+                        .filter(e -> e.getEntityType() == Params.EntityType.FIRE )
+                        .limit(1)
+                        .count();
+            }
+        }
+        return counter;
+    }
+
 
     public int howManyBurned() {
         return (int) getCellsAsArrayList().stream().filter(c ->

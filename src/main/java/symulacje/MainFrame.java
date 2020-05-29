@@ -72,13 +72,15 @@ public class MainFrame extends JFrame  {
         // TODO: nice summary panel :)
         JLabel labelSummary;
         if(Simulation.getInstance().countDead()==0){
-            labelSummary=new JLabel("Everyone run away! :)");
+            labelSummary=new JLabel("Everyone ran away! :)");
         } else{
             labelSummary=new JLabel("Not everyone managed to run away :(");
         }
         JLabel labelTime = new JLabel(String.format("Time of evacuation: %d s", Simulation.getInstance().getTimeOfEvacuation()));
         JLabel labelDeaths = new JLabel(String.format("Deaths: %d", Simulation.getInstance().countDead()));
         JLabel labelEvacuated = new JLabel(String.format("Evacuated: %d", Simulation.getInstance().countEvacuated()));
+
+        JLabel labelFire = new JLabel(String.format("Tunnel coverage with fire: %d %%", Simulation.getInstance().countFireCellsCoverage(), '%'));
         Button exitButton = new Button("Exit!");
 
         constraints.gridx = 0;
@@ -96,6 +98,10 @@ public class MainFrame extends JFrame  {
         constraints.gridx = 0;
         constraints.gridy = 3;
         summaryPanel.add(labelEvacuated, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        summaryPanel.add(labelFire, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 6;

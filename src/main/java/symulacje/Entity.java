@@ -140,12 +140,7 @@ public abstract class Entity {
                 sF[su] -= speedFactor * Math.abs(ySpeed);
             }
         }
-/*
-        //makes corner cells count for less
-        sF[0] = (nw * Math.sqrt(2));
-        sF[2]*=Math.sqrt(2);
-        sF[5]*=Math.sqrt(2);
-        sF[7]*=Math.sqrt(2);*/
+
         this.speedToNeighCells = sF;
 
     }
