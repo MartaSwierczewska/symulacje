@@ -1,11 +1,6 @@
 package symulacje;
 
 
-import javafx.util.Pair;
-
-import java.util.ArrayList;
-import javafx.util.Pair;
-
 public class Fire extends Entity {
 
 
