@@ -76,9 +76,11 @@ public class Simulation {
                 // repainting all components
                 board.repaint();
 
+                // System.out.println(String.format("Dead: %d\nEvacuated: %d\nStill fighting: %d\n\n", countDead(), countEvacuated(), Params.peopleAmount - (countDead() + countEvacuated())));
+
                 // checking for break conditions
                 if(!board.isPersonOnBoard()) {
-                    System.out.println("Everyone ran away!");
+                    System.out.println("Simulation finished!");
                     break;
                 }
                 //System.out.println(board.howManyBurned());
@@ -87,7 +89,9 @@ public class Simulation {
                 try { sleep(Params.sleepInterval); } catch (InterruptedException e) { e.printStackTrace(); }
             }
 
-            System.exit(0);
+            try { sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+            MainFrame.getInstance().simulationStopped();
+            // System.exit(0);
         }
     }
 
@@ -135,6 +139,16 @@ public class Simulation {
         people.stream().filter(person ->
                 person.getCell().getEntities().stream().anyMatch(entity -> entity.getEntityType() == Params.EntityType.FIRE))
                 .forEach(person -> person.setActive(false));
+    }
+
+    public long countDead() {
+        return people.stream().filter(person ->
+                person.getCell().getEntities().stream().anyMatch(entity -> entity.getEntityType() == Params.EntityType.FIRE))
+                .count();
+    }
+
+    public long countEvacuated() {
+        return people.stream().filter(person -> person.getCell().getCellType() == Params.CellType.EXIT).count();
     }
 
 

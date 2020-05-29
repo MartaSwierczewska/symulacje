@@ -12,6 +12,7 @@ public class MainFrame extends JFrame  {
     JPanel rootPanel = new JPanel();
     JPanel upperPanel;
     JPanel simulationPanel;
+    JPanel summaryPanel;
 
 
     private MainFrame() {
@@ -35,14 +36,45 @@ public class MainFrame extends JFrame  {
         return instance;
     }
 
-    private void resize() {
+    private void resizeForSimulation() {
         int simulationPanelWidth = Params.boardLatitude * Params.cellDimension;
         int simulationPanelHeight = (Params.boardLongitude + 1) * Params.cellDimension;
-
         int initialPanelHeight = upperPanel.getHeight();
-
         this.setSize(new Dimension(simulationPanelWidth, simulationPanelHeight + initialPanelHeight));
     }
+
+
+    private void resizeForSummary() {
+        this.setSize(new Dimension(summaryPanel.getWidth(), summaryPanel.getHeight()));
+        this.pack();
+    }
+
+
+    public void simulationStopped() {
+        this.setSummaryPanel();
+
+        rootPanel.add(summaryPanel);
+        rootPanel.revalidate();
+        rootPanel.repaint();
+        this.resizeForSummary();
+    }
+
+
+    private void setSummaryPanel() {
+        rootPanel.removeAll();
+        summaryPanel = new JPanel();
+
+        // preview version
+        // TODO: nice summary panel :)
+        JLabel labelSummary = new JLabel("Summary: ");
+        JLabel labelDeaths = new JLabel(String.format("Deaths: %d", Simulation.getInstance().countDead()));
+        JLabel labelEvacuated = new JLabel(String.format("Evacuated: %d", Simulation.getInstance().countEvacuated()));
+
+        summaryPanel.add(labelSummary);
+        summaryPanel.add(labelDeaths);
+        summaryPanel.add(labelEvacuated);
+    }
+
 
     public class UpperPanel extends JPanel {
 
@@ -52,7 +84,6 @@ public class MainFrame extends JFrame  {
         JTextField exitsAmountField;
         JTextField windSpeedField;
         JTextField windDirectionField;
-
 
         Button submitButton;
         Button resumeButton;
@@ -164,6 +195,8 @@ public class MainFrame extends JFrame  {
             resumeButton.addActionListener(panel -> onResume());
             controlPanel.add(resumeButton);
 
+
+
             this.add(controlPanel);
             this.revalidate();
             this.repaint();
@@ -210,7 +243,7 @@ public class MainFrame extends JFrame  {
 
             this.startSimulation();
 
-            MainFrame.this.resize();
+            MainFrame.this.resizeForSimulation();
         }
 
         private void onPause() {
