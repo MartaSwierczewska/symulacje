@@ -69,7 +69,6 @@ public class MainFrame extends JFrame  {
         constraints.anchor = GridBagConstraints.WEST;
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        // TODO: nice summary panel :)
         JLabel labelSummary;
         if(Simulation.getInstance().countDead()==0){
             labelSummary=new JLabel("Everyone ran away! :)");
@@ -80,7 +79,7 @@ public class MainFrame extends JFrame  {
         JLabel labelDeaths = new JLabel(String.format("Deaths: %d", Simulation.getInstance().countDead()));
         JLabel labelEvacuated = new JLabel(String.format("Evacuated: %d", Simulation.getInstance().countEvacuated()));
 
-        JLabel labelFire = new JLabel(String.format("Tunnel coverage with fire: %d %%", Simulation.getInstance().countFireCellsCoverage(), '%'));
+        JLabel labelFire = new JLabel(String.format("Tunnel coverage with fire: %d %%", (int)(Simulation.getInstance().countFireCellsCoverage()), '%'));
         Button exitButton = new Button("Exit!");
 
         constraints.gridx = 0;
@@ -116,7 +115,6 @@ public class MainFrame extends JFrame  {
 
         // add the panel to this frame
         this.add(summaryPanel);
-
     }
 
 
@@ -232,7 +230,10 @@ public class MainFrame extends JFrame  {
 
             controlPanel = new JPanel();
             this.setLayout(new GridBagLayout());
+
             GridBagConstraints constraints = new GridBagConstraints();
+            constraints.anchor = GridBagConstraints.WEST;
+            constraints.insets = new Insets(10, 10, 10, 10);
 
             pauseButton = new Button("Pause");
             pauseButton.addActionListener(panel -> onPause());
@@ -240,6 +241,7 @@ public class MainFrame extends JFrame  {
             resumeButton = new Button("Resume");
             resumeButton.addActionListener(panel -> onResume());
 
+//            TODO: skasowac albo dokonczyc :)
             JLabel labelLegendPerson = new JLabel("Person");
             JLabel labelLegendFire = new JLabel("Fire");
             JLabel labelLegendExit = new JLabel("Exit");
@@ -250,13 +252,13 @@ public class MainFrame extends JFrame  {
             constraints.gridx = 1;
             controlPanel.add(resumeButton, constraints);
 
-            constraints.gridx = 0;
-            constraints.gridy = 1;
-            initialPanel.add(labelLegendPerson, constraints);
-            constraints.gridx = 1;
-            initialPanel.add(labelLegendFire, constraints);
             constraints.gridx = 2;
-            initialPanel.add(labelLegendExit, constraints);
+            constraints.gridy = 2;
+            controlPanel.add(labelLegendPerson, constraints);
+            constraints.gridx = 4;
+            controlPanel.add(labelLegendFire, constraints);
+            constraints.gridx = 6;
+            controlPanel.add(labelLegendExit, constraints);
 
             this.add(controlPanel);
             this.revalidate();

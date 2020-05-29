@@ -167,8 +167,8 @@ public class Simulation {
         return timeOfSimulation;
     }
 
-    public long countFireCellsCoverage(){
+    public double countFireCellsCoverage(){
         Board board = Board.getInstance();
-        return board.countFireCells()/(Params.boardLatitude*Params.boardLongitude)*100;
+        return (double)board.countFireCells()/(Params.boardLatitude*Params.boardLongitude)*100;
     }
 }
