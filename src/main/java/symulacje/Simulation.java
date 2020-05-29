@@ -1,5 +1,9 @@
 package symulacje;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,6 +20,7 @@ public class Simulation {
     public AnimationThread animationThread;
     public long tickCounter = 0;
 
+    public long timeOfSimulation=0L;
 
     public static Simulation getInstance() {
         if(simulationInstance == null)
@@ -50,6 +55,7 @@ public class Simulation {
         public void safeSuspend() { suspend = true; }
 
         public void run(){
+            LocalDateTime startTime = LocalDateTime.now();
             while(!stop) {
                 // in case of suspending simulation, maybe it will be added in the future
                 synchronized (this) {
@@ -81,6 +87,9 @@ public class Simulation {
                 // checking for break conditions
                 if(!board.isPersonOnBoard()) {
                     System.out.println("Simulation finished!");
+                    LocalDateTime endTime = LocalDateTime.now();
+                    countTimeOfEvacuation(startTime, endTime);
+
                     break;
                 }
                 //System.out.println(board.howManyBurned());
@@ -89,9 +98,9 @@ public class Simulation {
                 try { sleep(Params.sleepInterval); } catch (InterruptedException e) { e.printStackTrace(); }
             }
 
-            try { sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+            try { sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
             MainFrame.getInstance().simulationStopped();
-            // System.exit(0);
+
         }
     }
 
@@ -117,15 +126,14 @@ public class Simulation {
 
     private void detectFirePlaces() {
         firePlaces.clear();
-        board.getCellsAsArrayList().stream().forEach(c -> {
+        board.getCellsAsArrayList().forEach(c -> {
             if(c.getEntities().stream().anyMatch(e -> e.getEntityType() == Params.EntityType.FIRE))
                 firePlaces.add(new Fire(Params.EntityType.FIRE, c));
         });
 
-        for(int i=0;i<firePlaces.size();i++){
-            if(!cellsWithBurnTime.containsKey(firePlaces.get(i).currentCell))
-            {
-                cellsWithBurnTime.put(firePlaces.get(i).currentCell, new Long(Simulation.getInstance().tickCounter)-1);
+        for (Fire firePlace : firePlaces) {
+            if (!cellsWithBurnTime.containsKey(firePlace.currentCell)) {
+                cellsWithBurnTime.put(firePlace.currentCell, Simulation.getInstance().tickCounter - 1);
             }
         }
     }
@@ -151,6 +159,15 @@ public class Simulation {
         return people.stream().filter(person -> person.getCell().getCellType() == Params.CellType.EXIT).count();
     }
 
+    public void countTimeOfEvacuation(LocalDateTime start, LocalDateTime end){
+        timeOfSimulation = Duration.between(start, end).toSeconds();
+    }
 
+    public long getTimeOfEvacuation(){
+        return timeOfSimulation;
+    }
 
+    public long countFireCells(){
+
+    }
 }

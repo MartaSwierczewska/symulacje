@@ -63,16 +63,54 @@ public class MainFrame extends JFrame  {
     private void setSummaryPanel() {
         rootPanel.removeAll();
         summaryPanel = new JPanel();
+        summaryPanel.setLayout(new GridBagLayout());
 
-        // preview version
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 10, 10, 10);
+
         // TODO: nice summary panel :)
-        JLabel labelSummary = new JLabel("Summary: ");
+        JLabel labelSummary;
+        if(Simulation.getInstance().countDead()==0){
+            labelSummary=new JLabel("Everyone run away! :)");
+        } else{
+            labelSummary=new JLabel("Not everyone managed to run away :(");
+        }
+        JLabel labelTime = new JLabel(String.format("Time of evacuation: %d s", Simulation.getInstance().getTimeOfEvacuation()));
         JLabel labelDeaths = new JLabel(String.format("Deaths: %d", Simulation.getInstance().countDead()));
         JLabel labelEvacuated = new JLabel(String.format("Evacuated: %d", Simulation.getInstance().countEvacuated()));
+        Button exitButton = new Button("Exit!");
 
-        summaryPanel.add(labelSummary);
-        summaryPanel.add(labelDeaths);
-        summaryPanel.add(labelEvacuated);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        summaryPanel.add(labelSummary, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        summaryPanel.add(labelTime, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        summaryPanel.add(labelDeaths, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        summaryPanel.add(labelEvacuated, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        constraints.gridwidth = 3;
+        constraints.anchor = GridBagConstraints.CENTER;
+
+        exitButton.addActionListener(panel ->System.exit(0));
+        summaryPanel.add(exitButton, constraints);
+
+        // set border for the panel
+        summaryPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Summary of evacuation"));
+
+        // add the panel to this frame
+        this.add(summaryPanel);
+
     }
 
 
@@ -185,17 +223,34 @@ public class MainFrame extends JFrame  {
 
         private void setControlPanel() {
             this.removeAll();
+
             controlPanel = new JPanel();
+            this.setLayout(new GridBagLayout());
+            GridBagConstraints constraints = new GridBagConstraints();
 
             pauseButton = new Button("Pause");
             pauseButton.addActionListener(panel -> onPause());
-            controlPanel.add(pauseButton);
 
             resumeButton = new Button("Resume");
             resumeButton.addActionListener(panel -> onResume());
-            controlPanel.add(resumeButton);
 
+            JLabel labelLegendPerson = new JLabel("Person");
+            JLabel labelLegendFire = new JLabel("Fire");
+            JLabel labelLegendExit = new JLabel("Exit");
 
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            controlPanel.add(pauseButton, constraints);
+            constraints.gridx = 1;
+            controlPanel.add(resumeButton, constraints);
+
+            constraints.gridx = 0;
+            constraints.gridy = 1;
+            initialPanel.add(labelLegendPerson, constraints);
+            constraints.gridx = 1;
+            initialPanel.add(labelLegendFire, constraints);
+            constraints.gridx = 2;
+            initialPanel.add(labelLegendExit, constraints);
 
             this.add(controlPanel);
             this.revalidate();
