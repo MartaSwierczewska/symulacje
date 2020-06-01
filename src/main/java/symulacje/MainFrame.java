@@ -242,9 +242,9 @@ public class MainFrame extends JFrame  {
             resumeButton.addActionListener(panel -> onResume());
 
 //            TODO: skasowac albo dokonczyc :)
-            JLabel labelLegendPerson = new JLabel("Person");
-            JLabel labelLegendFire = new JLabel("Fire");
-            JLabel labelLegendExit = new JLabel("Exit");
+            // JLabel labelLegendPerson = new JLabel("Person");
+            // JLabel labelLegendFire = new JLabel("Fire");
+            // JLabel labelLegendExit = new JLabel("Exit");
 
             constraints.gridx = 0;
             constraints.gridy = 0;
@@ -252,13 +252,13 @@ public class MainFrame extends JFrame  {
             constraints.gridx = 1;
             controlPanel.add(resumeButton, constraints);
 
-            constraints.gridx = 2;
-            constraints.gridy = 2;
-            controlPanel.add(labelLegendPerson, constraints);
-            constraints.gridx = 4;
-            controlPanel.add(labelLegendFire, constraints);
-            constraints.gridx = 6;
-            controlPanel.add(labelLegendExit, constraints);
+//            constraints.gridx = 2;
+//            constraints.gridy = 2;
+//            controlPanel.add(labelLegendPerson, constraints);
+//            constraints.gridx = 4;
+//            controlPanel.add(labelLegendFire, constraints);
+//            constraints.gridx = 6;
+//            controlPanel.add(labelLegendExit, constraints);
 
             this.add(controlPanel);
             this.revalidate();
@@ -266,7 +266,7 @@ public class MainFrame extends JFrame  {
             MainFrame.this.pack();
         }
 
-        private void getValues() {
+        private boolean getValues() {
             try {
                 Params.boardLatitude = Integer.parseInt(this.latitudeField.getText());
                 Params.boardLongitude = Integer.parseInt(this.longitudeField.getText());
@@ -278,19 +278,21 @@ public class MainFrame extends JFrame  {
                 if( Params.windDirection==0 || Params.windDirection==180 || Params.windDirection==360) {
                     Params.windDirection *= (Math.PI / 180); //degrees to radians
                     Params.windSpeed = 0;
-                }
-                else{
+                } else {
                     Params.windDirection *= (Math.PI/180) ; //degrees to radians
                     Params.windSpeed = Integer.parseInt(this.windSpeedField.getText())*1000/3600D; //m/s
                 }
                 Params.xSpeed= Params.windSpeed *Math.cos(Params.windDirection);
                 Params.ySpeed= Params.windSpeed*Math.sin(Params.windDirection);
                 //System.out.println(Params.ySpeed + "  "+ Params.xSpeed);
-
+                return true;
             } catch (NumberFormatException e) {
-                System.out.println("Illegal arguments!");
-                System.exit(1);
+                // JOptionPane.showMessageDialog(MainFrame.this, "Illegal arguments!");
+                // System.out.println("Illegal arguments!");
+                // System.exit(1);
+                return false;
             }
+
         }
 
         private void startSimulation() {
@@ -301,9 +303,14 @@ public class MainFrame extends JFrame  {
         }
 
         private void onSubmit() {
-            this.getValues();
-            this.setControlPanel();
+            if(!this.getValues()) {
+                JOptionPane.showMessageDialog(MainFrame.this, "Illegal parameters!");
+                this.remove(initialPanel);
+                this.setInitialPanel();
+                return;
+            }
 
+            this.setControlPanel();
             this.startSimulation();
 
             MainFrame.this.resizeForSimulation();
