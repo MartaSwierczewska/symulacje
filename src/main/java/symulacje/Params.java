@@ -18,7 +18,6 @@ public class Params {
     public static double ySpeed;
 
 
-
     // constant properties
     public static final int peopleSpeed = 1;
     public static final int fireSpeed = 4;
